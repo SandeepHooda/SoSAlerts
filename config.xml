@@ -2,6 +2,8 @@
 <widget id="com.ionicframework.todo678781" version="0.0.10" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>SOS Alerts</name>
   <description>
+        SOS Alerts
+    </description>
   <author email="sonu.hooda@gmail.com" href="http://example.com/">
       Sandeep Hooda
     </author>
