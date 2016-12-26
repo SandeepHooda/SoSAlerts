@@ -1,0 +1,95 @@
+<ion-view title="Contacts" >
+ <ion-content >
+
+ <table >
+ 	<tr style="height:12px;">
+ 		<th >
+ 			Inactive
+ 		</th>
+ 		<th  width="10">
+ 			Phone no
+ 		</th>
+ 		<th >
+ 		Relationship
+ 		</th>
+ 	</tr>
+ 	<tr style="height:12px;">
+ 		<td >
+ 			<ion-checkbox ng-model="mydata.inactive1" style="border:none;padding-left:30px" ng-change="saveContactDetails()"></ion-checkbox>
+ 		</td>
+ 		<td  width="10">
+ 			<input type="text" phone-number ng-model="mydata.contact1" style="border:1px solid #888888;margin:6px;width:100px;" ng-change="saveContactDetails()" /> 
+ 		</td>
+ 		<td >
+ 		<div style=" margin:6px;width:60px;">
+ 			<div class="selectWrapper" >
+		       <select  class="selectBox " ng-model="mydata.relationWithMe1" ng-options="relation  for relation in mydata.allrelations" ng-change="saveContactDetails()"></select>
+		  </div>
+		  </div>
+ 		</td>
+ 	</tr>
+ 	 	<tr style="height:12px;">
+ 		<td >
+ 			<ion-checkbox ng-model="mydata.inactive2" style="border:none;padding-left:30px" ng-change="saveContactDetails()"></ion-checkbox>
+ 		</td>
+ 		<td  width="10">
+ 			<input type="text" phone-number  ng-model="mydata.contact2" style="border:1px solid #888888;margin:6px;width:100px;" ng-change="saveContactDetails()" />
+ 		</td>
+ 		<td >
+ 		<div style=" margin:6px;width:60px;">
+ 			<div class="selectWrapper" >
+		      <select  class="selectBox " ng-model="mydata.relationWithMe2" ng-options="relation  for relation in mydata.allrelations" ng-change="saveContactDetails()"></select>
+		  </div>
+		  </div>
+ 		</td>
+ 	</tr> 	<tr style="height:12px;">
+ 		<td >
+ 			<ion-checkbox ng-model="mydata.inactive3" style="border:none;padding-left:30px" ng-change="saveContactDetails()"></ion-checkbox>
+ 		</td>
+ 		<td  width="10">
+ 			<input type="text" phone-number  ng-model="mydata.contact3" style="border:1px solid #888888;margin:6px;width:100px;" ng-change="saveContactDetails()"/>
+ 		</td>
+ 		<td >
+ 		<div style=" margin:6px;width:60px;">
+ 			<div class="selectWrapper" >
+		       <select  class="selectBox " ng-model="mydata.relationWithMe3" ng-options="relation  for relation in mydata.allrelations" ng-change="saveContactDetails()"></select>
+		  </div>
+		  </div>
+ 		</td>
+ 	</tr> 	<tr style="height:12px;">
+ 		<td >
+ 			<ion-checkbox ng-model="mydata.inactive4" style="border:none;padding-left:30px" ng-change="saveContactDetails()"></ion-checkbox>
+ 		</td>
+ 		<td  width="10">
+ 			<input type="text" phone-number  ng-model="mydata.contact4" style="border:1px solid #888888;margin:6px;width:100px;" ng-change="saveContactDetails()" />
+ 		</td>
+ 		<td >
+ 		<div style=" margin:6px;width:60px;">
+ 			<div class="selectWrapper" >
+		       <select  class="selectBox " ng-model="mydata.relationWithMe4" ng-options="relation for relation in mydata.allrelations" ng-change="saveContactDetails()"></select>
+		  </div>
+		  </div>
+ 		</td>
+ 	</tr> 	<tr style="height:12px;">
+ 		<td >
+ 			<ion-checkbox ng-model="mydata.inactive5" style="border:none;padding-left:30px" ng-change="saveContactDetails()"></ion-checkbox>
+ 		</td>
+ 		<td  width="10">
+ 			<input type="text" phone-number  ng-model="mydata.contact5" style="border:1px solid #888888;margin:6px;width:100px;" ng-change="saveContactDetails()"/>
+ 		</td>
+ 		<td >
+ 		<div style=" margin:6px;width:60px;">
+ 			<div class="selectWrapper" >
+		       <select  class="selectBox " ng-model="mydata.relationWithMe5" ng-options="relation  for relation in mydata.allrelations" ng-change="saveContactDetails()"></select>
+		  </div>
+		  </div>
+ 		</td>
+ 	</tr>
+ 	
+ 	
+ 	
+ </table>
+
+
+ </ion-content>
+</ion-view>

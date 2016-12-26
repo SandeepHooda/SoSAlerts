@@ -1,0 +1,39 @@
+<ion-view title="Home" >
+ <ion-content class="padding">
+<table>
+	<tr>
+		<td><B>Periodic location updates&nbsp;&nbsp;</B></td>
+		<td>
+			<div class="onoffswitch" >
+			    <input type="checkbox" name="onoffswitchApp" class="onoffswitch-checkbox" id="onoffswitchApp" ng-model="myData.periodicAlerts" ng-change="periodicCheckBoxClicked()">
+			    <label class="onoffswitch-label" for="onoffswitchApp">
+			        <span class="onoffswitch-inner"></span>
+			        <span class="onoffswitch-switch"></span>
+			    </label>
+			</div> 
+		</td>
+		
+	</tr>
+</table>
+<br/><br/><br/><br/>
+<center> 
+<img src="img/Help.png" height="300px" width="300px" ng-click="toggleRedAlert()" ng-if="!myData.redAlert"  />
+<div ng-if="myData.redAlert">
+Your contacts are being informed that you need help.
+<img src="img/ok.jpg" height="300px" width="300px" ng-click="toggleRedAlert()"  />
+</div>
+</center>
+<!--  
+ 
+<div >
+<button type="button" ng-click="addFence()">Send SMS!</button><br/><br/><br/>
+
+<button type="button" ng-click="enableShake()">Enable shake Me!</button><br/><br/><br/>
+
+<button type="button" ng-click="disableShake()">Disable shake Me!</button><br/><br/><br/>
+<button type="button" ng-click="mapMe()">Find me in map!</button><br/><br/><br/>
+<button type="button" ng-click="sendEmail()">Send email!</button><br/><br/><br/>
+</div>
+-->
+ </ion-content>
+</ion-view>

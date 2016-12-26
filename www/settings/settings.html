@@ -1,0 +1,36 @@
+<ion-view title="Settings" cache-view="false">
+ <ion-content class="padding">
+ 
+
+<b>Periodic alerts about my location <span>{{myData.frequencyOfGreenAlerts}}</span> minutes 
+<br/>
+ <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
+<br/><br/>
+Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> seconds 
+<br/>
+ <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfRedAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
+<br/><br/><br/>
+
+<input type="radio" name="map" ng-model="myData.mapType"  value="mapMyIndia" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Map my India
+<input type="radio" name="map" ng-model="myData.mapType"  value="googleMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Google maps
+<input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Both
+
+<br/><br/>
+<ion-checkbox style="border:none;padding-left:30px" ng-model="myData.useChargerUnplugEvent"  ng-change="updateSettings()">
+&nbsp;&nbsp;&nbsp;Charger unplug for Danger signal
+</ion-checkbox>
+<!-- 
+<br/>
+<ion-checkbox ng-model="myData.cacheMyLocation" style="border:none;padding-left:30px" ng-change="updateSettings()">
+&nbsp;&nbsp;&nbsp;Fetch and cache my location
+</ion-checkbox>
+
+<span ng-if="myData.cacheMyLocation">
+Fetch and cache my location <span>{{myData.cacheMyLocationFrequency}}</span> minutes. It will come handy in case of emergency 
+<br/>
+<input type="range" name="range" ng-change="updateSettings()" ng-model="myData.cacheMyLocationFrequency" min="5"  max="60" style=" width: 260px; height: 50px;">
+</span>
+ -->
+</b>
+ </ion-content>
+</ion-view>
