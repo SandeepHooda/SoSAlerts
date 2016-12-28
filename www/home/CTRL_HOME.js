@@ -104,28 +104,90 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 	}
 	
+	$scope.changerJustUnplugged = false;
+	$scope.batterylevel =0;
 	//Listen to unplug event
 	$rootScope.$on("$cordovaBatteryStatus:status", function(event, args) {
          
-		 
-		 
-         if (args.isPlugged){
-        	if ($scope.myData.redAlert ){//If phone is plugged and there was any red alert shut that down. How can some one chnage a phone when in danger.
+		//1. If phone is plugged and there was any red alert shut that down. How can some one chnage a phone when in danger.
+		 if (args.isPlugged){
+        	if ($scope.myData.redAlert ){
             	 $scope.toggleRedAlert();
              }
          }
          
-          $scope.fireUnplugEvent = dataRestore.getFromCache("useChargerUnplugEvent",'boolean');
-         
-         if(!args.isPlugged && !$scope.myData.redAlert && $scope.fireUnplugEvent ) {//When every thing was ok and you unplugged the phone to signal danger
-        	 dataRestore.saveInCache("useChargerUnplugEvent", false);
-        	 $scope.toggleRedAlert();
-        	 $state.transitionTo('tab.home');
+         //2. Find out if charger just unplugged
+          if(args.isPlugged){
+        	  $scope.changerJustUnplugged = false;
+        	  
+          }else {
+        	 if ($scope.batterylevel > 0 && args.level >= $scope.batterylevel){//check $scope.batterylevel > 0 so that alert is not fired on app start
+        		  $scope.changerJustUnplugged = true; 
+        	  }else {
+        		  $scope.changerJustUnplugged = false;
+        	  }
+          }
+          $scope.batterylevel = args.level;
+          
+          //3. check if alerts needs to be fired
+          $scope.useChargerUnplugEvent = dataRestore.getFromCache("useChargerUnplugEvent",'boolean');
+         if($scope.changerJustUnplugged && !$scope.myData.redAlert && $scope.useChargerUnplugEvent ) {//When every thing was ok and you unplugged the phone to signal danger
+        	 navigator.geolocation.getCurrentPosition($scope.inspectLocation, $scope.fireRedAlert, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
         	 
-         }
+        }
          
      });
 	 
+	$scope.fireRedAlert = function() {
+		$scope.toggleRedAlert();
+   	 	$state.transitionTo('tab.home');
+   	 	dataRestore.saveInCache("useChargerUnplugEvent", false);//So that charger fault (charger that gets plugged and unplugged frequently) don't effect application
+	}
+	$scope.inspectLocation = function(position) {
+		var lat = position.coords.latitude;
+	    var lon = position.coords.longitude;
+	    if(!$scope.LocationInSafeZone(lat,lon)){
+	    	$scope.fireRedAlert();
+	    }else {
+	    	alert("Charger unplug detedted but You are at safe location.")
+	    }
+	}
+	$scope.LocationInSafeZone = function(lat,lon) {
+		var withInSafeZone = false;
+		
+		var safeDistance = dataRestore.getFromCache('safeDistance', 'number');
+		if (safeDistance === 0){
+			safeDistance = 500;
+		}
+		$scope.myData.myLocations = dataRestore.restoreSavedLocations();
+		for (var i=0; i<$scope.myData.myLocations.length;i++){
+			var location = $scope.myData.myLocations[i].details;
+			location = location.split(",");
+			if ($scope.getDistanceFromLatLonInMeters(lat,lon,parseFloat(location[0]),parseFloat(location[1])) < safeDistance ){
+				withInSafeZone = true;
+				break;
+			}
+		}
+		
+		return withInSafeZone;
+	}
+	 $scope.getDistanceFromLatLonInMeters = function(lat1,lon1,lat2,lon2) {
+		  var R = 6371; // Radius of the earth in km
+		  var dLat = $scope.deg2rad(lat2-lat1);  // deg2rad below  
+		  var dLon = $scope.deg2rad(lon2-lon1); 
+		  var a = 
+		    Math.sin(dLat/2) * Math.sin(dLat/2) +
+		    Math.cos($scope.deg2rad(lat1)) * Math.cos($scope.deg2rad(lat2)) * 
+		    Math.sin(dLon/2) * Math.sin(dLon/2)
+		    ; 
+		  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		  var d = R * c*1000; // Distance in meters
+		  return d;
+		}
+
+	$scope.deg2rad = function (deg) {
+		  return deg * (Math.PI/180)
+	}
 	var activeContacts = dataRestore.getActiveContacts();
 	if (activeContacts.length <=0){
 		alert("Please add contacts details so that we can send them your updates, when required.");

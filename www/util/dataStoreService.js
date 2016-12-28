@@ -13,8 +13,32 @@ APP.SERVICES.service('dataRestore', function() {
 			}
 		}
 		
+		if (type === 'number'){
+			value = parseInt(window.localStorage.getItem(key))
+			if (isNaN(value) ){
+				value = 0; 
+			}
+		}
 		
 		return value;
+	}
+	
+	this.deleteAllSavedLocation = function(){
+		for (var i =0; i< 100;i++){
+			window.localStorage.setItem('Location'+i, null);	
+		}
+	}
+	this.restoreSavedLocations = function () {
+		var myLocations = [];
+		for (var i =0; i< 100;i++){
+			var location = window.localStorage.getItem('Location'+i);
+			if (location === null || location === 'null'){
+				break;
+			}
+			myLocations.push(JSON.parse(location));
+		}
+		
+		return myLocations;
 	}
     this.restoreSettings = function (myData) {
     	if (window.localStorage.getItem("mapType") && window.localStorage.getItem("mapType") != null){
