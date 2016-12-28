@@ -39,12 +39,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			     }
 			   });
 			   
-			/*var r = confirm("Looks like everything is ok now. Do you want to turn of period green alerts?");
-			if (r == true) {
-				$scope.myData.periodicAlerts = true;
-			} else {
-				$scope.myData.periodicAlerts = false;
-			}*/
+			
 			
 		}else {
 			
@@ -203,7 +198,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	}
 	var activeContacts = dataRestore.getActiveContacts();
 	if (activeContacts.length <=0){
-		alert("Please add contacts details so that we can send them your updates, when required.");
+		$ionicPopup.alert({
+		     title: 'No Contact details!',
+		     template: 'Please add contacts details so that we can send them your updates, when required.'
+		   });
 		$state.transitionTo('tab.contacts');
 	}
 	
@@ -238,7 +236,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		 
 		cordova.plugins.diagnostic.isLocationAvailable(function(available){
 				   if(!available){
-					   alert('Please trun on location settings and allow app to access it.');
+					   $ionicPopup.alert({
+						     title: 'Not able to locate you!',
+						     template: 'Please trun on location settings and allow app to access it.'
+						   });
+					   
 					  if ('true' === window.localStorage.getItem("userGaveLocationPermission")){//user gave access some time back but now location is not availabe
 						   //probably cause is user turned off his location , another reason could be used revoked permission for app 
 						 cordova.plugins.diagnostic.switchToLocationSettings(); 

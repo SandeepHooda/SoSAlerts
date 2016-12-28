@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ionicPlatform','$state',
-    function($scope,dataRestore,$ionicPlatform,$state){
+APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ionicPlatform','$state','$ionicPopup',
+    function($scope,dataRestore,$ionicPlatform,$state,$ionicPopup){
 	$scope.mydata = {};
 	$scope.mydata.safeDistance = 500;
 	$scope.updateSafeDistance = function(){
@@ -7,22 +7,29 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 	}
 	
 	$scope.deleteLocation = function (index) {
-		var r = confirm("Are you sure you want to delete this location?");
-		if (r == true) {
-			//Delete all from sorage
-			for (var i=0;i<$scope.mydata.myLocations.length;i++){
-				window.localStorage.setItem('Location'+i, null);
-			}
-			//Remove that location object from array
-			$scope.mydata.myLocations.splice(index, 1);
-			
-			//Store all fresh data
-			for (var i=0;i<$scope.mydata.myLocations.length;i++){
-				window.localStorage.setItem('Location'+i, JSON.stringify($scope.mydata.myLocations[i]));
-			}
-			
-			$scope.refresh(); 
-		} 
+		var confirmPopup = $ionicPopup.confirm({
+		     title: 'Delete location',
+		     template: 'Are you sure you want to delete this location?'
+		   });
+
+		   confirmPopup.then(function(res) {
+		     if(res) {
+		    	//Delete all from sorage
+					for (var i=0;i<$scope.mydata.myLocations.length;i++){
+						window.localStorage.setItem('Location'+i, null);
+					}
+					//Remove that location object from array
+					$scope.mydata.myLocations.splice(index, 1);
+					
+					//Store all fresh data
+					for (var i=0;i<$scope.mydata.myLocations.length;i++){
+						window.localStorage.setItem('Location'+i, JSON.stringify($scope.mydata.myLocations[i]));
+					}
+					
+					$scope.refresh(); 
+		     } 
+		   });
+		 
 	    };
 	$scope.refresh = function(){
 		setTimeout(function(){
@@ -33,7 +40,19 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 	
 	$scope.mydata.myLocations = dataRestore.restoreSavedLocations();
 	$scope.refresh();
-	
+	$scope.noLocation = function (){
+		
+		var confirmPopup = $ionicPopup.confirm({
+		     title: 'Not able to locate you!',
+		     template: 'Could not locate you. Please check if you gave location settings turned on or try again later. Do you want to check location settings now?'
+		   });
+
+		   confirmPopup.then(function(res) {
+		     if(res) {
+		    	 cordova.plugins.diagnostic.switchToLocationSettings();
+		     } 
+		   });
+	}
 		$scope.foundLocation = function(position) {
 
 			    var lat = position.coords.latitude;
@@ -49,7 +68,7 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 		 $scope.mydata.locationName = "";
 		$scope.addThisLocation =function(){
 			//cordova plugin add https://github.com/cowbell/cordova-plugin-geofence
-			navigator.geolocation.getCurrentPosition($scope.foundLocation, function(){}, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+			navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		}
 		
 		$scope.openLocation = function (index){
