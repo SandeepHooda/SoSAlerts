@@ -157,7 +157,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    if(!$scope.LocationInSafeZone(lat,lon)){
 	    	$scope.fireRedAlert();
 	    }else {
-	    	alert("Charger unplug detedted but You are at safe location.")
+	    	$ionicPopup.alert({
+			     title: 'Charger unplugged!',
+			   });
+	    	
 	    }
 	}
 	$scope.LocationInSafeZone = function(lat,lon) {
