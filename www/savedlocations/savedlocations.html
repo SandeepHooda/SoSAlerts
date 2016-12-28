@@ -1,0 +1,26 @@
+<ion-view title="SavedLocations" >
+ <ion-content class="padding">
+
+  <label class="item item-input">
+    <input type="text" placeholder="Name this location"  ng-model="mydata.locationName" ng-change="saveYourDetails()">
+  </label>
+  
+ 
+<button class="button button-block button-positive" ng-model="mydata.email" ng-click="addThisLocation()">
+  Save this Location!
+</button>
+
+
+<span ng-repeat="location in mydata.myLocations" >
+<div class="panel" id="panel{{$index}}">
+
+<div  class="card" ng-click="openLocation({{$index}})">
+  <div class="item item-text-wrap">
+    {{location.name}}	
+  </div>
+</div>
+  
+</div>
+</span>
+ </ion-content>
+</ion-view>

@@ -60,6 +60,15 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
+				}).state('tab.savedlocations',{
+					url:'/savedlocations',
+					views: {
+						 'tab-savedlocations': {
+						 templateUrl: 'savedlocations/savedlocations.html',
+						 controller: 'CTRL_SAVEDLOCATIONS'
+						 }
+					}	
+					
 				})
 				$urlRouterProvider.otherwise('/tab/home');
 			}

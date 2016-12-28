@@ -232,6 +232,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		    var lon = position.coords.longitude;
 		    $scope.userLocation = lat + ',' + lon;
 		    $scope.userLocationGoogle = $scope.userLocation+',15z';
+		    //cordova plugin add https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2
 		cordova.plugins.email.open({
 		    to:      'sonu.hooda@gmail.com',
 		    subject: 'Save me',
