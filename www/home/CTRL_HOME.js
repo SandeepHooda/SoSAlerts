@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state){
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup){
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
@@ -26,12 +26,25 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	$scope.toggleRedAlert = function(){
 		if($scope.myData.redAlert){
 			$scope.myData.redAlert = false;
-			var r = confirm("Looks like everything is ok now. Do you want to turn of period green alerts?");
+			var confirmPopup = $ionicPopup.confirm({
+			     title: 'Safe Mode',
+			     template: 'Looks like everything is ok now. Do you want to turn of period green alerts?'
+			   });
+
+			   confirmPopup.then(function(res) {
+			     if(res) {
+			    	 $scope.myData.periodicAlerts = true;
+			     } else {
+			    	 $scope.myData.periodicAlerts = false;
+			     }
+			   });
+			   
+			/*var r = confirm("Looks like everything is ok now. Do you want to turn of period green alerts?");
 			if (r == true) {
 				$scope.myData.periodicAlerts = true;
 			} else {
 				$scope.myData.periodicAlerts = false;
-			}
+			}*/
 			
 		}else {
 			

@@ -1,9 +1,10 @@
 APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ionicPlatform','$state',
     function($scope,dataRestore,$ionicPlatform,$state){
 	$scope.mydata = {};
-		/*$ionicPlatform.ready( function() {
-			$scope.restoreFromStorage();
-		});*/
+	$scope.mydata.safeDistance = 500;
+	$scope.updateSafeDistance = function(){
+		window.localStorage.setItem('safeDistance', $scope.mydata.safeDistance);
+	}
 	
 	$scope.deleteLocation = function (index) {
 		var r = confirm("Are you sure you want to delete this location?");
@@ -33,18 +34,7 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 	$scope.mydata.myLocations = dataRestore.restoreSavedLocations();
 	$scope.refresh();
 	
-		/*document.addEventListener('deviceready', function () {
-		    // window.geofence is now available
-		    window.geofence.initialize().then(function () {
-		        console.log("Successful initialization");
-		    }, function (error) {
-		        console.log("Error", error);
-		    });
-		}, false);*/
-		
-		
-		
-		 $scope.foundLocation = function(position) {
+		$scope.foundLocation = function(position) {
 
 			    var lat = position.coords.latitude;
 			    var lon = position.coords.longitude;
@@ -54,29 +44,6 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 				
 				 $scope.mydata.myLocations.push(locationObj);
 				 $scope.refresh(); 
-			    
-			    
-			   /* window.geofence.addOrUpdate({
-				    id:             $scope.mydata.locationName, //A unique identifier of geofence
-				    latitude:       lat, //Geo latitude of geofence
-				    longitude:      lon, //Geo longitude of geofence
-				    radius:         50, //Radius of geofence in meters
-				    transitionType: TransitionType.BOTH, //Type of transition 1 - Enter, 2 - Exit, 3 - Both
-				    notification: {         //Notification object
-				        id:             1, //optional should be integer, id of notification
-				        title:          $scope.mydata.locationName, //Title of notification
-				        text:           'Entering or exiting', //Text of notification
-				       
-				        openAppOnClick: true,//is main app activity should be opened after clicking on notification
-				        
-				       
-				    }
-				}).then(function () {
-					
-				  
-				}, function (reason) {
-				    alert('Adding geofence failed'+reason);
-				});*/
 			    
 			 }
 		 $scope.mydata.locationName = "";
@@ -90,21 +57,20 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 			 var location =  $scope.mydata.myLocations[index];
 			 var userLocation = location.details;
 			 var userLocationGoogle = userLocation+',15z';
-			    //window.open('https://www.google.co.in/maps/@'+userLocationGoogle,'_system');
-			    window.open('https://maps.mapmyindia.com/@'+userLocation,'_system');
+			    
+			 if (!$scope.mydata.mapType){
+				 window.open('https://maps.mapmyindia.com/@'+userLocation,'_system');
+			 }else{
+				window.open('https://www.google.co.in/maps/@'+userLocationGoogle,'_system');
+			 }
+			   
 		}
+		//$ionicPlatform.ready( function() {
+			$scope.mydata.safeDistance = parseInt(window.localStorage.getItem('safeDistance'));
+			if (isNaN($scope.mydata.safeDistance)){
+				$scope.mydata.safeDistance = 500;
+			}
+		//});
 		
-		/*window.geofence.getWatched().then(function (geofencesJson) {
-	    var geofences = JSON.parse(geofencesJson);
-	    alert(geofences);
-	    console.log(geofences);
-		});*/
-	
-	/*window.geofence.onTransitionReceived = function (geofences) {
-	    geofences.forEach(function (geo) {
-	        console.log('Geofence transition detected', geo);
-	        alert('Geofence transition detected'+ geo);
-	    });
-	};*/
 	}
 ])

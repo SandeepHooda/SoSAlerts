@@ -1,6 +1,22 @@
 <ion-view title="SavedLocations" >
  <ion-content class="padding">
+<label class="toggle">
+   <input type="checkbox" ng-model="mydata.mapType">
+   <div class="track">
+     <div class="handle"></div>
+   </div>
+</label>
+<span ng-if="mydata.mapType">Show location using Google maps</span>
+<span ng-if="!mydata.mapType">Show location using map my India</span>
+<br/>
+<br/>
+<span>Safe zone around these locations {{mydata.safeDistance}} in meters (Geo fencing)</span>
+<div class="item range">
 
+  <i class="icon ion-android-walk"></i>
+  <input type="range" name="volume" min="50"  max="500" ng-model="mydata.safeDistance" ng-change="updateSafeDistance()">
+  <i class="ion-android-bicycle"></i>
+</div>
   <label class="item item-input">
     <input type="text" placeholder="Name this location"  ng-model="mydata.locationName" ng-change="saveYourDetails()">
   </label>
