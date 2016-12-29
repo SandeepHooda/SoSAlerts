@@ -63,7 +63,18 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			var settings = {};
 			dataRestore.restoreSettings(settings);
 			var activeContacts = dataRestore.getActiveContacts();
+			
 			var message =" I reached safely. My location is: "
+			if ($scope.userLocation && $scope.userLocation.indexOf(",") > 0){
+				var location = $scope.userLocation.split(",");
+				var findLocation = $scope.LocationInSafeZone(parseFloat(location[0]), parseFloat(location[1]));
+				
+				if (findLocation.withInSafeZone){
+					message = "I reached "+findLocation.NameOfLocation+" safely. My location is: "
+				}
+			}
+			
+			
 			if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
 				message += ' https://www.google.co.in/maps/@'+$scope.userLocationGoogle;
 			}
@@ -78,9 +89,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 					     title: 'SMS Sent!',
 					     template: 'Phone #: '+activeContacts[i].phone +' Message: '+activeContacts[i].relation+ message
 					   });
+					
 				}
 			}
-		}, 5000);
+			
+		}, 2000);
 		
 		
 	}
@@ -181,18 +194,21 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	$scope.inspectLocation = function(position) {
 		var lat = position.coords.latitude;
 	    var lon = position.coords.longitude;
-	    if(!$scope.LocationInSafeZone(lat,lon)){
+	    var foundLocation = $scope.LocationInSafeZone(lat,lon);
+	    if(!foundLocation.withInSafeZone){
 	    	$scope.fireRedAlert();
 	    }else {
+	    	$state.transitionTo('tab.home');
 	    	$ionicPopup.alert({
 			     title: 'Charger unplugged!',
-			     template: 'Charger unplug detected. Not sending SOS alerts at this time because you are in safe zone. If you still want to send alerts press red colored "Help" button.'
+			     template: 'Charger unplug detected. Not sending SOS alerts at this time because you are at '+foundLocation.NameOfLocation+'. If you still want to send alerts press red colored "Help" button.'
 			   });
 	    	
 	    }
 	}
 	$scope.LocationInSafeZone = function(lat,lon) {
-		var withInSafeZone = false;
+		
+		var withInSafeZone = {"withInSafeZone":false, "NameOfLocation":""};
 		
 		var safeDistance = dataRestore.getFromCache('safeDistance', 'number');
 		if (safeDistance === 0){
@@ -203,11 +219,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			var location = $scope.myData.myLocations[i].details;
 			location = location.split(",");
 			if ($scope.getDistanceFromLatLonInMeters(lat,lon,parseFloat(location[0]),parseFloat(location[1])) < safeDistance ){
-				withInSafeZone = true;
+				withInSafeZone.withInSafeZone = true;
+				withInSafeZone.NameOfLocation = $scope.myData.myLocations[i].name;
 				break;
 			}
 		}
-		
 		return withInSafeZone;
 	}
 	 $scope.getDistanceFromLatLonInMeters = function(lat1,lon1,lat2,lon2) {
