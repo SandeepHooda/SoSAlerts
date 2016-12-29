@@ -14,6 +14,7 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 
 		   confirmPopup.then(function(res) {
 		     if(res) {
+		    	 var locationObj = $scope.mydata.myLocations[index];
 		    	//Delete all from sorage
 					for (var i=0;i<$scope.mydata.myLocations.length;i++){
 						window.localStorage.setItem('Location'+i, null);
@@ -27,6 +28,17 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 					}
 					
 					$scope.refresh(); 
+					window.geofence.remove(locationObj.name)
+				    .then(function () {
+				    	$ionicPopup.alert({
+						     title: 'Geo fence deleted for',
+						     template: locationObj.name
+						   });
+				    }
+				    , function (reason){
+				        
+				    });
+					
 		     } 
 		   });
 		 
@@ -63,13 +75,48 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 				
 				 $scope.mydata.myLocations.push(locationObj);
 				 $scope.refresh(); 
+				 
+				 window.geofence.addOrUpdate({
+					    id:             $scope.mydata.locationName,
+					    latitude:       lat,
+					    longitude:      lon,
+					    radius:         3000,
+					    transitionType: TransitionType.ENTER,
+					    notification: {
+					        id:             1,
+					        title:          "Welcome To "+$scope.mydata.locationName,
+					        text:           "Want to update family about this?",
+					        openAppOnClick: true
+					    }
+					}).then(function () {
+						$ionicPopup.alert({
+						     title: 'Geo fence added for',
+						     template: $scope.mydata.locationName
+						   });
+					}, function (reason) {
+					    //alert('Adding geofence failed', reason);
+					})
 			    
 			 }
+		/*window.geofence.onTransitionReceived = function (geofences) {
+		    geofences.forEach(function (geo) {
+		    	var transitionType = 'Exiting'
+		    	if (geo.transitionType == TransitionType.ENTER){
+		    		transitionType = 'Entring';
+		    	}
+		    	$ionicPopup.alert({
+				     title: transitionType,
+				     template: geo.id
+				   });
+		     
+		    });
+		};*/
 		 $scope.mydata.locationName = "";
 		$scope.addThisLocation =function(){
 			//cordova plugin add https://github.com/cowbell/cordova-plugin-geofence
 			navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		}
+		
 		
 		$scope.openLocation = function (index){
 			
