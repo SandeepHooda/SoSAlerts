@@ -57,6 +57,29 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 	}
  
+	$scope.reachedSafely = function(){
+		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+		setTimeout(function(){
+			var settings = {};
+			dataRestore.restoreSettings(settings);
+			var activeContacts = dataRestore.getActiveContacts();
+			var message =" I reached safely. My location is: "
+			if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
+				message += ' https://www.google.co.in/maps/@'+$scope.userLocationGoogle;
+			}
+			if (settings.mapType === 'mapMyIndia'  || settings.mapType === 'bothMaps'){
+				message +=' https://maps.mapmyindia.com/@'+$scope.userLocation
+			}
+			
+			if (activeContacts && activeContacts.length > 0){
+				for (var i =0; i<activeContacts.length;i++ ){
+					$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message)
+				}
+			}
+		}, 5000);
+		
+		
+	}
 	$scope.sendRedAlertSMS = function(settings, activeContacts){
 		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		var message =" I am in danger. My location is: "

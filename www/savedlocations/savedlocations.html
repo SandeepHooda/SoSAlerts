@@ -28,7 +28,7 @@
 Click on a location to view that on map. Swipe left to delete a location.
 
 <span ng-repeat="location in mydata.myLocations" >
-<div class="panel" id="panel{{$index}}">
+<div class="panel show" id="panel{{$index}}">
 
 <div  class="card" ng-click="openLocation({{$index}})" on-swipe-left="deleteLocation({{$index}})">
   <div class="item item-text-wrap">

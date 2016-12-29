@@ -1,5 +1,6 @@
 <ion-view title="Home" >
  <ion-content class="padding">
+ 
 <table>
 	<tr>
 		<td><B>Send periodic location updates&nbsp;&nbsp;</B></td>
@@ -23,17 +24,8 @@ Your contacts are being informed that you need help.
 <img src="img/ok.jpg" height="300px" width="300px" ng-click="toggleRedAlert()"  />
 </div>
 </center>
-<!--  
- 
-<div >
-<button type="button" ng-click="addFence()">Send SMS!</button><br/><br/><br/>
-
-<button type="button" ng-click="enableShake()">Enable shake Me!</button><br/><br/><br/>
-
-<button type="button" ng-click="disableShake()">Disable shake Me!</button><br/><br/><br/>
-<button type="button" ng-click="mapMe()">Find me in map!</button><br/><br/><br/>
-<button type="button" ng-click="sendEmail()">Send email!</button><br/><br/><br/>
-</div>
--->
+<button class="button button-block button-balanced" ng-click="reachedSafely()" >
+  I reached safely, Only 1 update
+</button>
  </ion-content>
 </ion-view>
