@@ -1,0 +1,36 @@
+[
+{"heading":"About the app",
+"details":["This is an app that you can use to send your location to your loved ones",
+			"In case you land into an emergency situation and need immediate help.",
+			"When you are in journey and wants to send frequent updates with your location.",
+			"You are on your way to your work and wants to let them know if you reached safe."
+		  ]
+
+},
+{"heading":"Inital Setup",
+"details":["You first need to turn on 'Location service' of your' phone. For this you need to go to your phone settings and turn this feature on. For this you need to come out of this app and go to settings of your phone and in the search glass on the settings page type Location services and turn that on",
+			"Now you need go to app and click the 'My Family' tab and add contacts",
+			"If you just want to add a contact and don't want to send updates to that contact click the 'Inctive box' next to that contact. Optionally you may choose the relation or leave it blank."
+			]
+
+},{"heading":"How to use app- Once you have done Initial Setup",
+"details":["In case of emergency you can press the red colored 'Help' button on the home page of app",
+			"Alternatively you may go to settings tab and turn on the feature 'Charger unplug for Danger signal' Once you have this feature turned on you simply need to plug your phone to charger in your car and unplug it in case you need help and are not in position to even unlock your phone you simply need to unplug it from the charger. If youy want to stop alerts you simpply need to plug the phone back in charger or go to home page and press the ok button (which will be vistible in place og 'Help' button only when an emergency alert is triggered.) Now the 'Charger unplug feature'  is auto turned off. Next time you want to use this feature you need to turn this on from settings page. Note This feaure will not alert when you are at a safe location that you aded from the 'Saved Locations' tab. ",
+			"When you are in a journey and want to send peridic alerts with your location, Go to home page and turn on 'Send periodic location updates''. you may adjust the interval from the slider below this."
+		  
+		  ]
+
+},{"heading":"Saved Locations",
+"details":["You may want to add a location as a safe location for ex your/your relative's home or your work place. ",
+			"In order to do that once you need to be at that location. When you are present at that location, go to 'Saved Locations' tab and give a name to that location and click 'Save this Location' button",
+			"At this point that location is saved. You may want to add a circular geo fence around that location say 200 meters to mark that 200 meters as safe zone. For that you need to adjust the slider on top of it",
+			"You may view this location on map by clicking the location card that is added when you click teh 'Save this location' button",
+			"You may search this location on 'Google map' or 'Map my India' by selecting map type from top of the page.",
+			"You may delete this by swiping left on this card."
+			
+		  ]
+
+}
+
+]
+

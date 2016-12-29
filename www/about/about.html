@@ -1,24 +1,19 @@
 <ion-view title="About" >
- <ion-content class="padding">
+ <ion-header-bar class="bar-positive">
+      <h1 class="title">FAQ</h1>
+    </ion-header-bar>
 
--> This is an app that may help you in case of emergency situation. This app sends SMS with your location to your configured phone numbers. You can configure the frequency of alerts. You may turn off period alerts and may send red alerts only in case of emergency. 
+    <ion-content>
+<span ng-repeat="group in groups">
+<button class="accordion"  ng-click="toggleAccordian({{$index}})" id="accordionfaq{{$index}}">{{group.heading}}</button>
+<span ng-repeat="detail in group.details">
+<div class="panel"  id="panelfaq{{$parent.$index}}{{$index}}">
+  <p>{{detail}}</p>
+</div>
+</span>
 
-<br/>
--> When you are travelling long distance and want to send period notifications to your contacts about you location.<br/>
--> When you are travelling in night and want to send period alerts with locations.<br/>
--> When you are driving you may plug your phone in charging mode and in case you meet an accident you just need to unplug your phone from charging and app will start sending red alerts until you turn them off. For this turn on the "Charger unplug for Danger signal" from settings page of the app.<br/>
+</span>
 
-<br/><br/>
-<b>To use this app you need to</b>
-<br/>
--> Turn on location of your phone<br/>
--> Give the app permission to access location<br/>
--> Your phone should be able to send SMS<br/>
-<br/><br/>
-Privacy: We don't share/ store your location to anyone other than the one in your contact list. It is a direct SMS from your phone to your contact so just stay relaxed
-
-
-
-
- </ion-content>
+    </ion-content>
 </ion-view>
+

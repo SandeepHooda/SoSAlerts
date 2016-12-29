@@ -56,7 +56,8 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					url:'/about',
 					views: {
 						 'tab-about': {
-						 templateUrl: 'about/about.html'
+						 templateUrl: 'about/about.html',
+						 controller: 'CTRL_ABOUT'
 						 }
 					}	
 					

@@ -159,6 +159,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    }else {
 	    	$ionicPopup.alert({
 			     title: 'Charger unplugged!',
+			     template: 'Charger unplug detected. Not sending SOS alerts at this time because you are in safe zone. If you still want to send alerts press red colored "Help" button.'
 			   });
 	    	
 	    }
