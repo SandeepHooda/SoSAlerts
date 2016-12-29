@@ -74,6 +74,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			if (activeContacts && activeContacts.length > 0){
 				for (var i =0; i<activeContacts.length;i++ ){
 					$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message)
+					$ionicPopup.alert({
+					     title: 'SMS Sent!',
+					     template: 'Phone #: '+activeContacts[i].phone +' Message: '+activeContacts[i].relation+ message
+					   });
 				}
 			}
 		}, 5000);

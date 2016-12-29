@@ -234,6 +234,22 @@ APP.SERVICES.service('dataRestore', function() {
 		if (!mydata.contact5 || mydata.contact5 === 'null'){
 			mydata.contact5 = ""
 		}
+		
+		if (!mydata.relationWithMe1 || mydata.relationWithMe1 === 'null'){
+			mydata.relationWithMe1 = ""
+		}
+		if (!mydata.relationWithMe2 || mydata.relationWithMe2 === 'null'){
+			mydata.relationWithMe2 = ""
+		}
+		if (!mydata.relationWithMe3 || mydata.relationWithMe3 === 'null'){
+			mydata.relationWithMe3 = ""
+		}
+		if (!mydata.relationWithMe4 || mydata.relationWithMe4 === 'null'){
+			mydata.relationWithMe4 = ""
+		}
+		if (!mydata.relationWithMe5 || mydata.relationWithMe5 === 'null'){
+			mydata.relationWithMe5 = ""
+		}
     }
     
 });
