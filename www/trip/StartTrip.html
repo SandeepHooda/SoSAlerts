@@ -1,0 +1,24 @@
+<ion-view title="StartTrip" cache-view="true">
+<ion-header-bar class="bar-positive">
+ <h1 class="title">Start my trip </h1>
+ </ion-header-bar>
+ <ion-content class="padding">
+   
+<ion-list>
+  <ion-item ng-repeat="location in mydata.myLocations"  id="location{{$index}}" >
+   
+<select  class="selectBox " ng-model="location.time" ng-options="time  for time in location.times" id="select{{$index}}" style="width:100px;" ng-change="markSelected({{$index}})" >
+ </select>
+ <button class="roundbtn"  ng-click="markSelected({{$index}})">
+  <i class="ion-android-walk" ng-show="location.trip != true" ></i>
+  <i class="ion-android-hand" ng-show="location.trip == true"></i>
+ </button>
+ to {{$index +1}} {{location.name}} 
+  </ion-item>
+</ion-list>
+
+<div class="selectWrapper" >
+		       
+		  </div>
+</ion-content>
+</ion-view>

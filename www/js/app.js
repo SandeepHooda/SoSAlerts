@@ -70,6 +70,15 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
+				}).state('tab.starttrip',{
+					url:'/starttrip',
+					views: {
+						 'tab-starttrip': {
+						 templateUrl: 'trip/StartTrip.html',
+						 controller: 'CTRL_StartTrip'
+						 }
+					}	
+					
 				})
 				$urlRouterProvider.otherwise('/tab/home');
 			}

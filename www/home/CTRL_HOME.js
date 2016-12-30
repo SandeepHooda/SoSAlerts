@@ -57,19 +57,28 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 	}
  
-	$scope.reachedSafely = function(){
+	$rootScope.$on('sendSMS',function(event, data){
+		$scope.reachedSafelyWithMessage(data);
+	});
+	
+	$scope.reachedSafelyWithMessage = function(messagePassed){
 		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		setTimeout(function(){
 			var settings = {};
 			dataRestore.restoreSettings(settings);
 			var activeContacts = dataRestore.getActiveContacts();
 			
-			var message =" I reached safely. My location is: "
+			var message = null;
+				if (messagePassed === ''){
+					message =" I reached safely. My location is: "
+				}else{
+					message = messagePassed;
+				}
 			if ($scope.userLocation && $scope.userLocation.indexOf(",") > 0){
 				var location = $scope.userLocation.split(",");
 				var findLocation = $scope.LocationInSafeZone(parseFloat(location[0]), parseFloat(location[1]));
 				
-				if (findLocation.withInSafeZone){
+				if (findLocation.withInSafeZone && messagePassed === ''){
 					message = "I reached "+findLocation.NameOfLocation+" safely. My location is: "
 				}
 			}
@@ -95,6 +104,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			
 		}, 2000);
 		
+	}
+	
+	$scope.reachedSafely = function(){
+		
+		$scope.reachedSafelyWithMessage("");	
 		
 	}
 	$scope.sendRedAlertSMS = function(settings, activeContacts){
@@ -269,7 +283,18 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	      });
 	  }
 	
-	
+	$scope.foundLocation = function(position) {
+
+	    var lat = position.coords.latitude;
+	    var lon = position.coords.longitude;
+	    $scope.userLocation = lat + ',' + lon;
+	    $scope.userLocationGoogle = $scope.userLocation+',15z';
+	    //window.open('https://www.google.co.in/maps/@'+$scope.userLocationGoogle,'_system');
+	    //window.open('https://maps.mapmyindia.com/@'+$scope.userLocation,'_system');
+	 }
+	  $scope.noLocation = function() {
+		  
+	  }
 	$ionicPlatform.ready( function() {
 		
 		// Enable background mode
@@ -313,18 +338,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		});
 	
 	
-	 $scope.foundLocation = function(position) {
-
-	    var lat = position.coords.latitude;
-	    var lon = position.coords.longitude;
-	    $scope.userLocation = lat + ',' + lon;
-	    $scope.userLocationGoogle = $scope.userLocation+',15z';
-	    //window.open('https://www.google.co.in/maps/@'+$scope.userLocationGoogle,'_system');
-	    //window.open('https://maps.mapmyindia.com/@'+$scope.userLocation,'_system');
-	 }
-	  $scope.noLocation = function() {
-		  
-	  }
+	 
 	  /*$scope.mapMe = function(){
 			cordova.plugins.diagnostic.isLocationAvailable(function(available){
 			   if(!available){
@@ -429,6 +443,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	        console.log("Error", error);
 	    });
 	*/
+	  
 		
 	}
 ])
