@@ -47,7 +47,7 @@ Click on a location to view that on map. Swipe left to delete a location.
 
 <div  class="card" ng-click="openLocation({{$index}})" on-swipe-left="deleteLocation({{$index}})">
   <div class="item item-text-wrap">
-    {{location.name}}	
+   {{$index +1}} {{location.name}}	
   </div>
 </div>
   

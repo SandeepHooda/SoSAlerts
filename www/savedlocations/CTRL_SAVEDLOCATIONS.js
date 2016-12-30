@@ -19,8 +19,15 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 					for (var i=0;i<$scope.mydata.myLocations.length;i++){
 						window.localStorage.setItem('Location'+i, null);
 					}
-					//Remove that location object from array
-					$scope.mydata.myLocations.splice(index, 1);
+					
+					if($scope.mydata.myLocations.length == 1){
+						//Remove that location object from array
+						$scope.mydata.myLocations = []
+					}else {
+						//Remove that location object from array
+						$scope.mydata.myLocations.splice(index, 1);
+					}
+					
 					
 					//Store all fresh data
 					for (var i=0;i<$scope.mydata.myLocations.length;i++){

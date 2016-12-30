@@ -7,11 +7,15 @@
 
 <b>Periodic alerts about my location <span>{{myData.frequencyOfGreenAlerts}}</span> minutes 
 <br/>
+ <i class="ion-arrow-graph-down-left"></i> 
  <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
+<i class="ion-arrow-graph-up-right"></i> 
 <br/><br/>
 Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> seconds 
 <br/>
+ <i class="ion-arrow-graph-down-left"></i> 
  <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfRedAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
+ <i class="ion-arrow-graph-up-right"></i> 
 <br/><br/><br/>
 
 <input type="radio" name="map" ng-model="myData.mapType"  value="mapMyIndia" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Map my India
@@ -19,8 +23,8 @@ Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> second
 <input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Both
 
 <br/><br/>
-<ion-checkbox style="border:none;padding-left:30px" ng-model="myData.useChargerUnplugEvent"  ng-change="updateSettings()">
-&nbsp;&nbsp;&nbsp;Charger unplug for Danger signal
+<ion-checkbox style="border:none;padding-left:30px" ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()">
+&nbsp;&nbsp;&nbsp;<i class="ion-battery-charging"></i>Charger unplug for Danger signal
 </ion-checkbox>
 <!-- 
 <br/>
