@@ -22,7 +22,9 @@ APP.SERVICES.service('dataRestore', function() {
 		
 		return value;
 	}
-	
+	this.getGoogleKeyforLocationSrv = function(){
+		return "AIzaSyCJPCOYQwrjsZ2O8CPOIdW-O3BUlfyHP8Y";
+	}
 	this.deleteAllSavedLocation = function(){
 		for (var i =0; i< 100;i++){
 			window.localStorage.setItem('Location'+i, null);	

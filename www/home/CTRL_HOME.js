@@ -1,14 +1,18 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup){
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http){
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
 	$scope.userLocationGoogle = "";
 	
+	
 	$scope.myData.periodicAlerts = false;
 	$scope.myData.redAlert = false;
-	
+	$scope.vibrate = function(){
+		//cordova plugin add cordova-plugin-vibration
+		navigator.vibrate(1000);
+	}
 	//Listen to period push
 	$scope.periodicCheckBoxClicked = function(){
 		if ($scope.myData.periodicAlerts){
@@ -58,10 +62,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	}
  
 	$rootScope.$on('sendSMS',function(event, data){
-		$scope.reachedSafelyWithMessage(data);
+		$scope.reachedSafelyWithMessage(data, false, false);
 	});
 	
-	$scope.reachedSafelyWithMessage = function(messagePassed){
+	$scope.reachedSafelyWithMessage = function(messagePassed, showConfirmationAlert, appendLocationName){
 		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		setTimeout(function(){
 			var settings = {};
@@ -69,7 +73,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			var activeContacts = dataRestore.getActiveContacts();
 			
 			var message = null;
-				if (messagePassed === ''){
+				if (messagePassed == null){
 					message =" I reached safely. My location is: "
 				}else{
 					message = messagePassed;
@@ -93,11 +97,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			
 			if (activeContacts && activeContacts.length > 0){
 				for (var i =0; i<activeContacts.length;i++ ){
-					$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message)
-					$ionicPopup.alert({
-					     title: 'SMS Sent!',
-					     template: 'Phone #: '+activeContacts[i].phone +' Message: '+activeContacts[i].relation+ message
-					   });
+					if (appendLocationName){
+						$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert);
+					}else{
+						$scope.sendSMSWithLocationName (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert, '');
+					}
 					
 				}
 			}
@@ -108,7 +112,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	
 	$scope.reachedSafely = function(){
 		
-		$scope.reachedSafelyWithMessage("");	
+		$scope.reachedSafelyWithMessage(null,true, true);	
 		
 	}
 	$scope.sendRedAlertSMS = function(settings, activeContacts){
@@ -123,7 +127,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 		if (activeContacts && activeContacts.length > 0){
 			for (var i =0; i<activeContacts.length;i++ ){
-				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message)
+				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
 			}
 		}
 		if($scope.myData.redAlert){
@@ -155,7 +159,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 		if (activeContacts && activeContacts.length > 0){
 			for (var i =0; i<activeContacts.length;i++ ){
-				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message)
+				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
 			}
 		}
 		if($scope.myData.periodicAlerts){
@@ -266,9 +270,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		$state.transitionTo('tab.contacts');
 	}
 	
-	
-	$scope.sendSMS = function(phoneNumber, message) {
-		//alert(phoneNumber + message);
+	$scope.sendSMSWithLocationName = function(phoneNumber, message, showConfirmationAlert,locationName){
+		message += ' '+locationName
 		var options = {
 			    replaceLineBreaks: false, // true to replace \n by a new line, false by default
 			    android: {
@@ -277,11 +280,37 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			        //intent: 'INTENT' // send SMS inside a default SMS app
 			    }
 			  };
+		$scope.vibrate();
+		if (showConfirmationAlert){
+			$ionicPopup.alert({
+			     title: 'SMS being Sent!',
+			     template: 'Phone #: '+phoneNumber +' Message: '+message
+			     
+			   });
+		}
 		$cordovaSms.send(phoneNumber, message, options)
 	      .then(function() {
+	    	 
 	      }, function(error) {
+	    	  $ionicPopup.alert({
+				     title: 'Warning : SMS could not be Sent: '+error,
+				     template: 'Phone #: '+phoneNumber +' Message: '+message
+				     
+				   });
 	      });
-	  }
+	}
+	$scope.sendSMS = function(phoneNumber, message, showConfirmationAlert) {
+		$http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$scope.userLocation+'&key='+dataRestore.getGoogleKeyforLocationSrv()).then(function(response){
+			if (response.data.status == 'OK'){
+				$scope.sendSMSWithLocationName(phoneNumber, message , showConfirmationAlert, response.data.results[0].formatted_address)
+			}else {
+				$scope.sendSMSWithLocationName(phoneNumber, message , showConfirmationAlert, '')
+			}
+
+			},function(response){
+				$scope.sendSMSWithLocationName(phoneNumber, message , showConfirmationAlert,'')
+			});
+	}
 	
 	$scope.foundLocation = function(position) {
 
