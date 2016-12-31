@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http',
-    function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http){
+APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup',
+    function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup){
 	$scope.timeout = 1000 * 60;
 	$scope.refreshPage = function(){
 		setTimeout(function(){
@@ -27,7 +27,29 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		$scope.mydata.myLocations[i].times = $scope.mydata.times.slice(0);
 	}
 	
-	
+	$scope.checkLocationAvailable = function(){
+		cordova.plugins.diagnostic.isLocationAvailable(function(available){
+			if(!available){
+				var confirmPopup = $ionicPopup.confirm({
+				     title: "Looks like your phone's location Services are off. Please turn it on. ",
+				     template: 'Do you want to turn it on now?'
+				   });
+
+				   confirmPopup.then(function(res) {
+				     if(res) {
+				    	 cordova.plugins.diagnostic.switchToLocationSettings(); 
+				     } else {
+				    	 $ionicPopup.alert({
+						     title: "Looks like your phone's location Services are off. Please turn it on. ",
+						     template: 'Please turn the feature on before continuing.'
+						   });
+				     }
+				   });
+				   
+				  
+			 }
+		});
+	}
 	$scope.dateOptions = {
 		    weekday: "long", year: "numeric", month: "short",
 		    day: "numeric", hour: "2-digit", minute: "2-digit",second: "2-digit"
@@ -206,6 +228,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		
 		//2. if active trip exist set a new time out function
 		if ($scope.mydata.activeTrip != null){
+			$scope.checkLocationAvailable();
 			$scope.destinationETA = parseInt($scope.mydata.activeTrip.time);
 			if ($scope.destinationETA >= 15){//15 can not be hours it is minutes
 				$scope.destinationETA *= 1000*60; 
