@@ -1,6 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http',
     function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http){
-	$scope.timeout = 1000 * 5;
+	$scope.timeout = 1000 * 60;
 	$scope.refreshPage = function(){
 		setTimeout(function(){
 			$state.transitionTo('tab.starttrip');	
@@ -32,16 +32,14 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		    weekday: "long", year: "numeric", month: "short",
 		    day: "numeric", hour: "2-digit", minute: "2-digit",second: "2-digit"
 		};
-	$scope.displayTimeLeft = function(){
-		if($scope.mydata.tripStartDateObj != null){
-			$scope.mydata.tripStartDateObj = new Date();
-			$scope.mydata.tripStartTime = $scope.mydata.tripStartDateObj.toLocaleTimeString("en-us", $scope.dateOptions);
-				var diffMs = ($scope.destinationETADate - (new Date())); 
-				var diffMins = Math.round((diffMs) / 60000); // minutes
-				$scope.mydata.timeLeft = diffMins +" minutes ";
-				//$scope.refreshPage();
-				$scope.$apply();
-			}
+	$scope.displayTimeLeft = function(apply){
+		var diffMs = ($scope.destinationETADate - (new Date())); 
+		var diffMins = Math.round((diffMs) / 60000); // minutes
+		$scope.mydata.timeLeft = diffMins +" minutes ";
+		if(apply){
+			$scope.$apply();
+		}
+		
 	}
 	
 	$scope.startTrip = function(location,locationName, select,btn){
@@ -188,7 +186,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 			});
 	}
 	$scope.findWhereYouReached = function(){
-		$scope.displayTimeLeft();
+		$scope.displayTimeLeft(true);
 		$scope.mydata.activeTripTimeOutFunction = null;//time out triggered to make this variable null as it do not mean anything
 		navigator.geolocation.getCurrentPosition($scope.checkIfLocationisInLimit,$scope.retryLocationFind, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 	}
@@ -224,6 +222,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 				$scope.findWhereYouReached();
 				
 			}, $scope.timeout);
+			$scope.displayTimeLeft(false);
 		}
 		
 	}
