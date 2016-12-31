@@ -1,6 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup',
     function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup){
-	$scope.timeout = 1000 * 60;
+	
 	$scope.refreshPage = function(){
 		setTimeout(function(){
 			$state.transitionTo('tab.starttrip');	
@@ -25,6 +25,11 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	
 	for (var i=0;i<$scope.mydata.myLocations.length;i++){
 		$scope.mydata.myLocations[i].times = $scope.mydata.times.slice(0);
+	}
+	
+	$scope.vibrate = function(){
+		//cordova plugin add cordova-plugin-vibration
+		navigator.vibrate(1000);
 	}
 	
 	$scope.checkLocationAvailable = function(){
@@ -171,6 +176,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		var location = $scope.mydata.activeTrip.details;
 		location = location.split(",");
 		if (dataRestore.getDistanceFromLatLonInMeters(lat,lon,parseFloat(location[0]),parseFloat(location[1])) < safeDistance ){
+			$scope.vibrate();
 			$scope.$emit('sendSMS',"I reached "+$scope.mydata.activeTrip.name+" safely.");
 			$ionicPopup.alert({
 			     title: 'In Safe zone!',
