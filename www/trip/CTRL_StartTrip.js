@@ -1,12 +1,13 @@
 APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup',
     function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup){
-	
+	$scope.timeout = 1000 * 10;
 	$scope.refreshPage = function(){
 		setTimeout(function(){
 			$state.transitionTo('tab.starttrip');	
 		},1)
 		$state.transitionTo('tab.home');
 	}
+	
 	$scope.refreshPage();
 	$scope.locationNotFoundAlert = 0;
 	$scope.mydata = {};
