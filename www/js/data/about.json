@@ -12,16 +12,17 @@
 			"2. Now you need go to app and click the 'My Family' tab and add your family contacts persons. These contacts will be the recipient of SMS when you need help.",
 			"3. If you just want to add a contact and don't want to send updates to that contact (say for time being you don't want to disturb your mom) click on the 'Inactive box' next to that contact.",
 			"4. You may choose the relation with your contacts or leave it blank.",
-			"5. Now wheneve you need help this app will send SMS at a predefined interval. You may change the interval from the 'Settings' tab of this app. App will keep sending SMS until you turn them off (When you feel safe) or phone battery dies."
+			"5. Now whenever you need help this app will send SMS at a predefined interval. You may change the interval from the 'Settings' tab of this app. App will keep sending SMS until you turn them off (When you feel safe) or phone battery dies."
 			]
 
 },{"heading":"How to use app- Once you have done Initial Setup",
 "details":["1. In case of emergency you can press the big red colored 'Help' button which is on the home page of app",
-			"2. Alternatively you may go to 'Settings' tab and turn on the feature: 'Charger unplug for Danger signal'. If you have this feature turned on and say you are driving a car with phone plugged into car's USB charger. You simply need to unplug your phone from charger. This feature is extremely helpful when you meet a serious accident and are not even in a position to unlock your phone to press the 'help' button. Once alerts are triggered by this feature, it (this feature , not SMS- SMS will continue to flow till you mark the situation ok) will be auto turned off. Next time you want to use this feature you need to turn this on from 'Settings' page of the app. Note: This feature will not send alert when you are at a safe location that you added from the 'Saved Locations' tab (e.g. you are charging your phone at your home or at work).",
+			"2. Alternatively you may go to 'Settings' tab and turn on the feature: 'Charger unplug for Danger signal'. If you have this feature turned on and say you are driving a car with phone plugged into car's USB charger. You simply need to unplug your phone from charger. This feature is extremely helpful when you meet a serious accident and are not even in a position to unlock your phone to press the 'help' button. Once alerts are triggered by this feature, it (this feature, not SMS- SMS will continue to flow till you mark the situation ok) will be auto turned off. Next time you want to use this feature you need to turn this on from 'Settings' page of the app. Note: This feature will not send alert when you are at a safe location that you added from the 'Saved Locations' tab (e.g. you are charging your phone at your home or at work).",
 			"3. When you are in a journey and want to send periodic alerts with your location: Go to 'Home' page of the app and turn on 'Send periodic location updates'. You may adjust the interval from the slider bar in the same 'Settings' tab.",
-			"4. When you reach your destination you may update your contact by pressing 'I reached safely' button. Only one SMS (With your location) will be sent to all your contact(s)."
-		  
-		  ]
+			"4. When you reach your destination you may update your contact by pressing 'I reached safely' button. Only one SMS (With your location) will be sent to all your contact(s).",
+			"5. Start my trip: Suppose you are heading to home and you expect to reach there in 30 minutes. Click 'Start A Trip' and select time. Now if you don't reach home in the expected time it will start sending alerts to you contacts with your location.",
+			"6. When you are at an unknown location and need help to find nearest Police Station/Hospital/ATM/Restaurants go to 'Near me' tab and click on what you are looking for."		
+			]
 
 },{"heading":"Saved Locations",
 "details":["1. You may want to add a location as a safe location e.g. your home or your work place.",

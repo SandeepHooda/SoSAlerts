@@ -1,6 +1,11 @@
 APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup',
     function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup){
-	$scope.timeout = 1000 * 10;
+	
+	var mySettings = {};
+	dataRestore.restoreSettings(mySettings);
+	mySettings.frequencyOfRedAlerts
+
+	$scope.timeout = 1000 * mySettings.frequencyOfRedAlerts;
 	$scope.refreshPage = function(){
 		setTimeout(function(){
 			$state.transitionTo('tab.starttrip');	
