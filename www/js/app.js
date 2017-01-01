@@ -79,6 +79,15 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
+				}).state('tab.nearme',{
+					url:'/nearme',
+					views: {
+						 'tab-nearme': {
+						 templateUrl: 'nearme/nearme.html',
+						 controller: 'CTRL_NearMe'
+						 }
+					}	
+					
 				})
 				$urlRouterProvider.otherwise('/tab/home');
 			}
