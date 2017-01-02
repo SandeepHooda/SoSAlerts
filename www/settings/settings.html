@@ -1,11 +1,11 @@
-<ion-view title="Settings" cache-view="false">
+<ion-view title="Settings" cache-view="false"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
       <h1 class="title">Settings</h1>
     </ion-header-bar>
  <ion-content class="padding">
   
-
-<b>Periodic alerts about my location <span>{{myData.frequencyOfGreenAlerts}}</span> minutes 
+<span class="whitecolor">
+<b><span >Periodic alerts about my location {{myData.frequencyOfGreenAlerts}} minutes </span>
 <br/>
  <i class="ion-arrow-graph-down-left"></i> 
  <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
@@ -26,18 +26,7 @@ Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> second
 <ion-checkbox style="border:none;padding-left:30px" ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()">
 &nbsp;&nbsp;&nbsp;<i class="ion-battery-charging"></i>Charger unplug for Danger signal
 </ion-checkbox>
-<!-- 
-<br/>
-<ion-checkbox ng-model="myData.cacheMyLocation" style="border:none;padding-left:30px" ng-change="updateSettings()">
-&nbsp;&nbsp;&nbsp;Fetch and cache my location
-</ion-checkbox>
-
-<span ng-if="myData.cacheMyLocation">
-Fetch and cache my location <span>{{myData.cacheMyLocationFrequency}}</span> minutes. It will come handy in case of emergency 
-<br/>
-<input type="range" name="range" ng-change="updateSettings()" ng-model="myData.cacheMyLocationFrequency" min="5"  max="60" style=" width: 260px; height: 50px;">
-</span>
- -->
 </b>
+</span>
  </ion-content>
 </ion-view>

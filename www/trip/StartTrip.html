@@ -1,11 +1,11 @@
-<ion-view title="StartTrip" cache-view="true">
+<ion-view title="StartTrip" cache-view="true"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
  <h1 class="title">Start my trip </h1>
  </ion-header-bar>
  <ion-content class="padding">
  <B>
 <span  ng-if="mydata.locationName != ''"> Current Location {{mydata.locationName}}<br/></span>
-  <span  ng-if="mydata.activeTrip"> Time to destination {{mydata.timeLeft}}</span>
+  <span  ng-if="mydata.activeTrip"> Time to destination: {{mydata.timeLeft}}</span>
   </B>
 <ion-list>
   <ion-item ng-repeat="location in mydata.myLocations"  id="location{{$index}}" >
@@ -16,7 +16,7 @@
   <i class="ion-android-walk" ng-show="location.trip != true" ></i>
   <i class="ion-android-hand" ng-show="location.trip == true"></i>
  </button>
- to {{$index +1}} {{location.name}} 
+ to {{location.name}} 
   </ion-item>
 </ion-list>
 

@@ -256,19 +256,19 @@ APP.SERVICES.service('dataRestore', function() {
 			mydata.contact5 = ""
 		}
 		
-		if (!mydata.relationWithMe1 || mydata.relationWithMe1 === 'null'){
+		if (!mydata.relationWithMe1 || mydata.relationWithMe1 === 'null' || mydata.relationWithMe1 === 'undefined'){
 			mydata.relationWithMe1 = ""
 		}
-		if (!mydata.relationWithMe2 || mydata.relationWithMe2 === 'null'){
+		if (!mydata.relationWithMe2 || mydata.relationWithMe2 === 'null' || mydata.relationWithMe2 === 'undefined'){
 			mydata.relationWithMe2 = ""
 		}
-		if (!mydata.relationWithMe3 || mydata.relationWithMe3 === 'null'){
+		if (!mydata.relationWithMe3 || mydata.relationWithMe3 === 'null' || mydata.relationWithMe3 === 'undefined'){
 			mydata.relationWithMe3 = ""
 		}
-		if (!mydata.relationWithMe4 || mydata.relationWithMe4 === 'null'){
+		if (!mydata.relationWithMe4 || mydata.relationWithMe4 === 'null' || mydata.relationWithMe4 === 'undefined'){
 			mydata.relationWithMe4 = ""
 		}
-		if (!mydata.relationWithMe5 || mydata.relationWithMe5 === 'null'){
+		if (!mydata.relationWithMe5 || mydata.relationWithMe5 === 'null' || mydata.relationWithMe5 === 'undefined'){
 			mydata.relationWithMe5 = ""
 		}
     }

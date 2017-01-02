@@ -1,9 +1,9 @@
-<ion-view title="Home" >
+<ion-view title="Home"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
       <h1 class="title">Home</h1>
     </ion-header-bar>
  <ion-content class="padding">
- 
+ <span class="whitecolor">
 <table>
 	<tr>
 		<td><B>Send periodic location updates&nbsp;&nbsp;</B></td>
@@ -21,6 +21,7 @@
 </table>
 
 <center> 
+
 <img src="img/Help.png" height="100%" width="100%" ng-click="toggleRedAlert()" ng-if="!myData.redAlert"  />
 <div ng-if="myData.redAlert">
 Your contacts are being informed that you need help.
@@ -29,6 +30,8 @@ Your contacts are being informed that you need help.
 </center>
 <button class="button button-block button-balanced" ng-click="reachedSafely()" >
   I reached safely, Only 1 update
-</button>
+</button><br/>
+<B> Please don't put app in bakground</B>
+</span>
  </ion-content>
 </ion-view>

@@ -1,4 +1,4 @@
-<ion-view title="SavedLocations" >
+<ion-view title="SavedLocations"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
       <h1 class="title">Saved Locations</h1>
     </ion-header-bar>
@@ -9,8 +9,8 @@
      <div class="handle"></div>
    </div>
 </label>
-<span ng-if="mydata.mapType">Show location using Google maps</span>
-<span ng-if="!mydata.mapType">Show location using map my India</span>
+<span ng-if="mydata.mapType" class="whitecolor">Show location using Google maps</span>
+<span ng-if="!mydata.mapType" class="whitecolor">Show location using map my India</span>
 <br/>
 <br/>
 <!-- 
@@ -25,7 +25,7 @@
 <br/>
 <br/>
  -->
-<span>Safe zone around these locations {{mydata.safeDistance}} in meters (Geo fencing)</span>
+<span class="whitecolor">Safe zone around these locations {{mydata.safeDistance}} in meters (Geo fencing)</span>
 <div class="item range">
 
   <i class="icon ion-android-walk"></i>
@@ -40,7 +40,7 @@
 <button class="button button-block button-positive" ng-model="mydata.email" ng-click="addThisLocation()">
   Save this Location!
 </button>
-Click on a location to view that on map. Swipe left to delete a location.
+<span class="whitecolor"> Click on a location to view that on map. Swipe left to delete a location.</span>
 
 <span ng-repeat="location in mydata.myLocations" >
 <div class="panel show" id="panel{{$index}}">

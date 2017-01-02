@@ -68,7 +68,8 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	$scope.displayTimeLeft = function(apply){
 		var diffMs = ($scope.destinationETADate - (new Date())); 
 		var diffMins = Math.round((diffMs) / 60000); // minutes
-		$scope.mydata.timeLeft = diffMins +" minutes ";
+		var seconds = Math.round(((diffMs-1) % 60000  ) / 1000);
+		$scope.mydata.timeLeft = (diffMins -1) +" minutes,  "+seconds+" seconds";
 		if(apply){
 			$scope.$apply();
 		}
@@ -170,14 +171,13 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	 }
 	  
 	$scope.checkIfLocationisInLimit  = function(position){
-		 
+		
 		var lat = position.coords.latitude;
 	    var lon = position.coords.longitude;
 	    var safeDistance = dataRestore.getFromCache('safeDistance', 'number');
 		if (safeDistance === 0){
 			safeDistance = 500;
 		}
-		
 		
 		var location = $scope.mydata.activeTrip.details;
 		location = location.split(",");
@@ -193,11 +193,12 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		}else{
 			if ($scope.destinationETADate - (new Date()) < 0){//ETA passed
 				$scope.markRed($scope.mydata.activeTrip.index);
-				$scope.mydata.activeTripTimeOutFunction = setTimeout(function(){
-					$scope.findWhereYouReached();
-				}, $scope.timeout);
+				
 				navigator.geolocation.getCurrentPosition($scope.alertDanger, $scope.alertDangerNoPos, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 			}
+			$scope.mydata.activeTripTimeOutFunction = setTimeout(function(){
+				$scope.findWhereYouReached();
+			}, $scope.timeout);
 			
 		}
 			
