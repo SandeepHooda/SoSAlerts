@@ -199,11 +199,23 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
           $scope.useChargerUnplugEvent = dataRestore.getFromCache("useChargerUnplugEvent",'boolean');
          if($scope.changerJustUnplugged && !$scope.myData.redAlert && $scope.useChargerUnplugEvent ) {//When every thing was ok and you unplugged the phone to signal danger
         	 navigator.geolocation.getCurrentPosition($scope.inspectLocation, $scope.fireRedAlert, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
-        	 
+        	 /*$scope.RedAlertFiredAfterUnplug = false;
+        	 shake.startWatch($scope.watchFoShake, 40 );
+        	 setTimeout(function(){//User must shake phone with in five minutes
+        		 $scope.RedAlertFiredAfterUnplug = false;
+        		 shake.stopWatch(); 
+        	 }, 1000*60*5);*/
         }
          
      });
-	 
+	$scope.RedAlertFiredAfterUnplug = false;
+	$scope.watchFoShake = function(){
+		if(!$scope.RedAlertFiredAfterUnplug){
+			$scope.RedAlertFiredAfterUnplug = true;
+			$scope.fireRedAlert();
+		}
+		
+	}
 	$scope.fireRedAlert = function() {
 		$scope.toggleRedAlert();
    	 	$state.transitionTo('tab.home');
@@ -214,6 +226,17 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    var lon = position.coords.longitude;
 	    var foundLocation = $scope.LocationInSafeZone(lat,lon);
 	    if(!foundLocation.withInSafeZone){
+	    	$http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+","+lon+'&key='+dataRestore.getGoogleKeyforLocationSrv()).then(function(response){
+				if (response.data.status == 'OK'){
+					$ionicPopup.alert({
+					     title: 'Charger unplugged!',
+					     template: 'Your location : '+response.data.results[0].formatted_address +" lat lon : "+lat+","+lon
+					   });
+				}
+				
+	    	},function(response){
+					
+			});
 	    	$scope.fireRedAlert();
 	    }else {
 	    	$state.transitionTo('tab.home');
