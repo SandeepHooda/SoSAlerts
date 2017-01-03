@@ -23,7 +23,7 @@ Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> second
 <input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Both
 
 <br/><br/>
-<ion-checkbox style="border:none;padding-left:30px" ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()">
+<input type="checkbox"  ng-model="mydata.inactive5" style="height:30px;width:30px; " ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()"> 
 &nbsp;&nbsp;&nbsp;<i class="ion-battery-charging"></i>Charger unplug for Danger signal
 </ion-checkbox>
 </b>
