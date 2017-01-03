@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http){
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate){
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
@@ -9,6 +9,9 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	
 	$scope.myData.periodicAlerts = false;
 	$scope.myData.redAlert = false;
+	$scope.showMenu = function () {
+	    $ionicSideMenuDelegate.toggleLeft();
+	  };
 	$scope.vibrate = function(){
 		//cordova plugin add cordova-plugin-vibration
 		navigator.vibrate(1000);
@@ -218,7 +221,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	}
 	$scope.fireRedAlert = function() {
 		$scope.toggleRedAlert();
-   	 	$state.transitionTo('tab.home');
+   	 	$state.transitionTo('menu.tab.home');
    	 	dataRestore.saveInCache("useChargerUnplugEvent", false);//So that charger fault (charger that gets plugged and unplugged frequently) don't effect application
 	}
 	$scope.inspectLocation = function(position) {
@@ -239,7 +242,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			});
 	    	$scope.fireRedAlert();
 	    }else {
-	    	$state.transitionTo('tab.home');
+	    	$state.transitionTo('menu.tab.home');
 	    	$ionicPopup.alert({
 			     title: 'Charger unplugged!',
 			     template: 'Charger unplug detected. Not sending SOS alerts at this time because you are at '+foundLocation.NameOfLocation+'. If you still want to send alerts press red colored "Help" button.'
@@ -290,7 +293,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		     title: 'No Contact details!',
 		     template: 'Please add contacts details so that we can send them your updates, when required.'
 		   });
-		$state.transitionTo('tab.contacts');
+		$state.transitionTo('menu.contacts');
 	}
 	
 	$scope.sendSMSWithLocationName = function(phoneNumber, message, showConfirmationAlert,locationName){

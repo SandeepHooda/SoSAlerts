@@ -51,10 +51,11 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 		 
 	    };
 	$scope.refresh = function(){
+		$scope.$emit('restoreLocations');
 		setTimeout(function(){
-			  $state.transitionTo('tab.savedlocations');
+			  $state.transitionTo('menu.tab.savedlocations');
 			}, 1);
-		  $state.transitionTo('tab.home');
+		  $state.transitionTo('menu.tab.home');
 	} 
 	
 	$scope.mydata.myLocations = dataRestore.restoreSavedLocations();

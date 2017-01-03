@@ -33,6 +33,6 @@ APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRest
 		$ionicPlatform.ready( function() {
 			$scope.restoreFromStorage();
 		});
-		//$state.transitionTo('tab.home');
+		//$state.transitionTo('menu.tab.home');
 	}
 ])

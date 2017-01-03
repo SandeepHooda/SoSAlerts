@@ -17,13 +17,35 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
          function($urlRouterProvider,$stateProvider,$ionicConfigProvider){
 	$ionicConfigProvider.tabs.position('bottom');
 	 // setup an abstract state for the tabs directive
-				$stateProvider.state('tab',{
+				$stateProvider.state('menu',{
+					url:'/menu',
+					abstract: true,
+					templateUrl:'menu.html'	
+					 
+					
+				}).state('menu.about',{
+					url:'/about',
+					templateUrl:'about/about.html',
+					controller: 'CTRL_ABOUT'
+					 
+					
+				}).state('menu.contacts',{
+					url:'/contacts',
+					templateUrl: 'contacts/contacts.html',
+					controller: 'CTRL_CONTACTS'
+				}).state('menu.settings',{
+					cache: false,
+					url:'/settings',
+					templateUrl: 'settings/settings.html',
+					controller: 'CTRL_SETTINGS'
+
+				}).state('menu.tab',{
 					url:'/tab',
 					abstract: true,
 					templateUrl:'tabs.html'	
 					 
 					
-				}).state('tab.home',{
+				}).state('menu.tab.home',{
 					url:'/home',
 					views: {
 						 'tab-home': {
@@ -32,36 +54,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
-				}).state('tab.contacts',{
-					url:'/contacts',
-					views: {
-						 'tab-contacts': {
-						 templateUrl: 'contacts/contacts.html',
-						 controller: 'CTRL_CONTACTS'
-						 }
-					}	
-					
-				}).state('tab.settings',{
-					cache: false,
-					url:'/settings',
-					views: {
-						 'tab-settings': {
-						 templateUrl: 'settings/settings.html',
-						 controller: 'CTRL_SETTINGS'
-						
-						 }
-					}	
-					
-				}).state('tab.about',{
-					url:'/about',
-					views: {
-						 'tab-about': {
-						 templateUrl: 'about/about.html',
-						 controller: 'CTRL_ABOUT'
-						 }
-					}	
-					
-				}).state('tab.savedlocations',{
+				}).state('menu.tab.savedlocations',{
 					url:'/savedlocations',
 					views: {
 						 'tab-savedlocations': {
@@ -70,7 +63,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
-				}).state('tab.starttrip',{
+				}).state('menu.tab.starttrip',{
 					url:'/starttrip',
 					views: {
 						 'tab-starttrip': {
@@ -79,7 +72,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 						 }
 					}	
 					
-				}).state('tab.nearme',{
+				}).state('menu.tab.nearme',{
 					url:'/nearme',
 					views: {
 						 'tab-nearme': {
@@ -89,7 +82,7 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					}	
 					
 				})
-				$urlRouterProvider.otherwise('/tab/home');
+				$urlRouterProvider.otherwise('/menu/tab/home');
 			}
          ])
 

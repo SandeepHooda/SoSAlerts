@@ -1,16 +1,17 @@
-APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup',
-    function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup){
+APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup','$rootScope',
+    function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup,$rootScope){
 	
 	var mySettings = {};
 	dataRestore.restoreSettings(mySettings);
 	mySettings.frequencyOfRedAlerts
+	
 
 	$scope.timeout = 1000 * mySettings.frequencyOfRedAlerts;
 	$scope.refreshPage = function(){
 		setTimeout(function(){
-			$state.transitionTo('tab.starttrip');	
+			$state.transitionTo('menu.tab.starttrip');	
 		},1)
-		$state.transitionTo('tab.home');
+		$state.transitionTo('menu.tab.home');
 	}
 	
 	$scope.refreshPage();
@@ -26,13 +27,19 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	$scope.mydata.TimeArray =[];
 	$scope.destinationETA = null;
 	$scope.destinationETADate = null;
-	$scope.mydata.myLocations = dataRestore.restoreSavedLocations();
-		//[{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"},{"name":"Home"}]
 	
-	for (var i=0;i<$scope.mydata.myLocations.length;i++){
-		$scope.mydata.myLocations[i].times = $scope.mydata.times.slice(0);
+	$scope.restoreLocations = function(){
+		$scope.mydata.myLocations = dataRestore.restoreSavedLocations();
+		
+		for (var i=0;i<$scope.mydata.myLocations.length;i++){
+			$scope.mydata.myLocations[i].times = $scope.mydata.times.slice(0);
+		}
 	}
 	
+	$scope.restoreLocations();
+	$rootScope.$on('restoreLocations',function(event, data){
+		$scope.restoreLocations();
+	});
 	$scope.vibrate = function(){
 		//cordova plugin add cordova-plugin-vibration
 		navigator.vibrate(1000);
@@ -259,6 +266,12 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 				
 			}, $scope.timeout);
 			$scope.displayTimeLeft(false);
+			
+			$scope.$emit('sendSMS','I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft);
+			$ionicPopup.alert({
+			     title: 'Start my journey!',
+			     template: 'I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft
+			   });
 		}
 		
 	}
