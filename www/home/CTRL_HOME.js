@@ -422,6 +422,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			}
 		}
 		
+	}
+	$scope.checkIfNFCScanned();*/
 	 
 	  /*$scope.mapMe = function(){
 			cordova.plugins.diagnostic.isLocationAvailable(function(available){
