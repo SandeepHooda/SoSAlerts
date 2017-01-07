@@ -1,10 +1,28 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate){
-	
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate','nfcService',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate, nfcService){
+	//cordova plugin add phonegap-nfc 
+	//cordova plugin add cordova-plugin-vibration
+	//cordova plugin add https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2
+	//cordova plugin add https://github.com/cowbell/cordova-plugin-geofence
+	//cordova plugin add cordova-plugin-vibration
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
 	$scope.userLocationGoogle = "";
+	 $scope.tag = nfcService.tag;
+    
+	/*function onNfc(nfcEvent) {
+	    // display the tag as JSON
+	    alert(JSON.stringify(nfcEvent.tag));
+	}
+	function success(result) {
+	    console.log("Listening for NFC Messages");
+	}
+	function failure(reason) {
+	    alert("Failed to add NDEF listener");
+	}
+	nfc.addNdefListener(onNfc, success, failure);
+*/
 	
 	
 	$scope.myData.periodicAlerts = false;
@@ -13,11 +31,12 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    $ionicSideMenuDelegate.toggleLeft();
 	  };
 	$scope.vibrate = function(){
-		//cordova plugin add cordova-plugin-vibration
+		
 		navigator.vibrate(1000);
 	}
 	//Listen to period push
 	$scope.periodicCheckBoxClicked = function(){
+		 //nfcService.writeData();
 		if ($scope.myData.periodicAlerts){
 			var mySettings = {};
 			dataRestore.restoreSettings(mySettings);
@@ -425,7 +444,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		    var lon = position.coords.longitude;
 		    $scope.userLocation = lat + ',' + lon;
 		    $scope.userLocationGoogle = $scope.userLocation+',15z';
-		    //cordova plugin add https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2
+		    
 		cordova.plugins.email.open({
 		    to:      'sonu.hooda@gmail.com',
 		    subject: 'Save me',

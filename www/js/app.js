@@ -7,11 +7,13 @@ var APP = {};
 APP.DIRECTIVE = angular.module('allDirective',[]);
 APP.CONTROLLERS = angular.module('allControllers',[]);
 APP.SERVICES = angular.module('allServices',[]);
+APP.FACTORY = angular.module('allFact',[]);
 APP.DEPENDENCIES = ['allControllers',
                     'allServices',
-                    'allDirective'
+                    'allDirective',
+                    'allFact'
                     ];
-APP.OTHERDEPENDENCIES = ['ionic','ngCordova'];
+APP.OTHERDEPENDENCIES = ['ionic','ngCordova','nfcFilters'];
 angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 .config(['$urlRouterProvider','$stateProvider','$ionicConfigProvider',
          function($urlRouterProvider,$stateProvider,$ionicConfigProvider){
@@ -38,6 +40,12 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					url:'/settings',
 					templateUrl: 'settings/settings.html',
 					controller: 'CTRL_SETTINGS'
+
+				}).state('menu.nfc',{
+					cache: false,
+					url:'/nfc',
+					templateUrl: 'nfc/nfc.html',
+					controller: 'CTRL_NFC'
 
 				}).state('menu.tab',{
 					url:'/tab',

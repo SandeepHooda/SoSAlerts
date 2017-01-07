@@ -41,7 +41,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		$scope.restoreLocations();
 	});
 	$scope.vibrate = function(){
-		//cordova plugin add cordova-plugin-vibration
+		
 		navigator.vibrate(1000);
 	}
 	

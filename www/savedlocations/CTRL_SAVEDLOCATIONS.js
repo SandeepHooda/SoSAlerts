@@ -121,7 +121,7 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 		};*/
 		 $scope.mydata.locationName = "";
 		$scope.addThisLocation =function(){
-			//cordova plugin add https://github.com/cowbell/cordova-plugin-geofence
+			
 			navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		}
 		
