@@ -1,8 +1,32 @@
 <ion-view title="NFC" cache-view="false"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
-      <h1 class="title">NFC tag and action</h1>
+      <h1 class="title">Configure Action on NFC tag</h1>
     </ion-header-bar>
  <ion-content class="padding">
- NFC Data {{tagData}}
+ <span class="whitecolor">
+ <label class="toggle">
+   <input type="checkbox" ng-model="mydata.modeOfNFC" ng-change="changeOfNFCMode()">
+   <div class="track">
+     <div class="handle"></div>
+   </div>
+</label>
+<b>
+<span ng-if="!mydata.modeOfNFC" >Tag Read only mode</span>
+<span ng-if="mydata.modeOfNFC" >Tag Write Mode</span>
+</b>
+<br/><br/>
+ <!-- Tag ID : {{currentTag.tagID}}<br/> -->
+ <b>Tag Action </b>: Move to '{{currentTag.tagAction.name}}' page
+ 
+<br/><br/>
+ <b>Configure Action on NFC tag</b> <br/>
+ <span ng-if="mydata.modeOfNFC">
+	 <span ng-if="!currentTag"> Please tab to a card </span>
+	 <span ng-if="currentTag"> Please select a action
+	<select  class="selectBox " ng-model="mydata.ActionForNewTag" ng-options="item  as item.name for item in mydata.listOfStates track by item.state"  style="width:150px;" ng-change="defineActionForTag()" >
+	 </select>
+	 </span>
+ </span>
+</span>
   </ion-content>
 </ion-view>

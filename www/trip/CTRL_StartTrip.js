@@ -23,7 +23,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	$scope.mydata.activeTrip = null;
 	$scope.mydata.activeTripTimeOutFunction = null;
 	$scope.mydata.timeLeft = "";
-	$scope.mydata.times= ["15 Minutes","30 minutes","45 minutes", "1 hour","2 Hour","3 Hour","4 Hour","5 Hour","6 Hour","7 Hour","8 Hour"];
+	$scope.mydata.times= dataRestore.getTripTimeSelectValues();
 	$scope.mydata.TimeArray =[];
 	$scope.destinationETA = null;
 	$scope.destinationETADate = null;

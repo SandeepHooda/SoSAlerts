@@ -24,7 +24,6 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	nfc.addNdefListener(onNfc, success, failure);
 */
 	
-	
 	$scope.myData.periodicAlerts = false;
 	$scope.myData.redAlert = false;
 	$scope.showMenu = function () {
@@ -411,7 +410,18 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  
 		});
 	
-	
+	/*$scope.checkIfNFCScanned = function(){
+		var tagData = window.localStorage.getItem('mostRecentTag');
+		if (null != tagData){
+			if ( ((new Date()).getTime() - nfcService.getTagReadTime().getTime()) < 2000 ){// Tag just read
+				var moveToState = dataRestore.getNfcAction(tagData);
+				if (null != moveToState){
+					$state.transitionTo(moveToState);
+				}
+				
+			}
+		}
+		
 	 
 	  /*$scope.mapMe = function(){
 			cordova.plugins.diagnostic.isLocationAvailable(function(available){

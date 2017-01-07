@@ -31,7 +31,13 @@ APP.SERVICES.service('dataRestore', function() {
 		}
 	}
 	
-	
+	this.getTripTimeSelectValues = function(){
+		return ["15 Minutes","30 minutes","45 minutes", "1 hour","2 Hour","3 Hour","4 Hour","5 Hour","6 Hour","7 Hour","8 Hour"];
+		
+	}
+	this.listOfStates = function(){
+		return [{"name":"Home","state":"menu.tab.home"},{"name":"My Locations","state":"menu.tab.savedlocations"},{"name":"Start a trip","state":"menu.tab.starttrip"},{"name":"Near me","state":"menu.tab.nearme"}];
+	}
 	 this.getDistanceFromLatLonInMeters = function(lat1,lon1,lat2,lon2) {
 		  var R = 6371; // Radius of the earth in km
 		  var dLat = this.deg2rad(lat2-lat1);  // deg2rad below  
@@ -60,6 +66,38 @@ APP.SERVICES.service('dataRestore', function() {
 		}
 		
 		return myLocations;
+	}
+	this.getStoredNFCTags = function(){
+		var storedNFC = [];
+		var data = window.localStorage.getItem('StoredNFCTags');
+		if (null != data){
+			storedNFC = JSON.parse(data);
+		}
+		return storedNFC;
+	}
+	this.addNFCTagsAction = function(newTag){
+		var storedNFC = [];
+		var nfcToBeStored = [];
+		var data = window.localStorage.getItem('StoredNFCTags');
+		if (null != data){
+			storedNFC = JSON.parse(data);
+			for (var i =0;i<storedNFC.length;i++){//Remove any previously action for that tag if any
+				if (storedNFC.tagID !== newTag.newTag){
+					nfcToBeStored.push(storedNFC[i]);
+				}
+			}
+		}
+		nfcToBeStored.push(newTag);
+		window.localStorage.setItem('StoredNFCTags',JSON.stringify(nfcToBeStored));
+	}
+	this.getNfcAction= function(nfcID){
+		var storedNFC = this.getStoredNFCTags();
+		for (var i =0;i<storedNFC.length;i++){
+			if (storedNFC.tagID !== nfcID){
+				return storedNFC[i].tagAction.state;
+			}
+		}
+		return null;
 	}
     this.restoreSettings = function (myData) {
     	if (window.localStorage.getItem("mapType") && window.localStorage.getItem("mapType") != null){
