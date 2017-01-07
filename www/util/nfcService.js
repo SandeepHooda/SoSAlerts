@@ -1,4 +1,4 @@
-APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$ionicPopup) {
+APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$ionicPopup,dataRestore) {
 
     var tag = "#";
     var tagReadTime = null;
@@ -24,10 +24,14 @@ APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$i
             $rootScope.$apply(function(){
             	tagReadTime = new Date();
                 this.tag = textData;
-                setTimeout(function(){
-                	$state.transitionTo('menu.nfc');
-    			}, 1);
-                $state.transitionTo('menu.tab.home');
+                
+                //if (dataRestore.getFromCache('changeOfNFCMode','boolean') == false){//in NFC read mode
+                	setTimeout(function(){
+                    	$state.transitionTo('menu.nfc');//rom NFC state we will redirect to the NFC action state
+        			});
+                	$state.transitionTo('menu.tab.home');
+                //}
+                
             });
         }, function () {
             console.log("Listening for NDEF Tags.");
