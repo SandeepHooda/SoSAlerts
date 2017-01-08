@@ -31,6 +31,11 @@ angular.module('starter', APP.DEPENDENCIES.concat(APP.OTHERDEPENDENCIES))
 					controller: 'CTRL_ABOUT'
 					 
 					
+				}).state('menu.demo',{
+					url:'/demo',
+					templateUrl:'demo/demo.html'
+					 
+					
 				}).state('menu.contacts',{
 					url:'/contacts',
 					templateUrl: 'contacts/contacts.html',

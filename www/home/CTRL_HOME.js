@@ -9,7 +9,26 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	$scope.myData ={};
 	$scope.userLocation ="";
 	$scope.userLocationGoogle = "";
-	 $scope.tag = nfcService.tag;
+	$scope.tag = nfcService.tag;
+	
+	$scope.myData.demoActionTaken = dataRestore.getFromCache("demoActionTaken",'boolean');;
+	$scope.demoActionTaken = function(){
+		$scope.myData.demoActionTaken = true;
+		dataRestore.saveInCache("demoActionTaken",true);
+	}
+	$scope.myData.showDemo = false;
+	$scope.showDemo = function () {
+		$scope.myData.showDemo = true;
+		setTimeout(function(){
+			$scope.myData.showDemo = false;
+			$scope.$apply();
+			
+		}, 1000*60*2);
+	};
+	$scope.skipDemo = function () {
+		$scope.myData.showDemo = false;
+		
+	};
     
 	/*function onNfc(nfcEvent) {
 	    // display the tag as JSON
