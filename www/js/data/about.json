@@ -22,7 +22,8 @@
 			"4. When you reach your destination you may update your contact by pressing 'I reached safely' button. Only one SMS (With your location) will be sent to all your contact(s).",
 			"5. Start my trip: Suppose you are heading to home and you expect to reach there in 30 minutes. Click 'Start A Trip' and select time. Now if you don't reach home in the expected time it will start sending alerts to you contacts with your location.",
 			"6. When you are at an unknown location and need help to find nearest Police Station/Hospital/ATM/Restaurants go to 'Near me' tab and click on what you are looking for.",		
-			"7. When you are using the app please don't put the app in background. You may lock the phone but putting the app in background may not be able to get your exact locations in some verion of phones. "
+			"7. When you are using the app please don't put the app in background. You may lock the phone but putting the app in background may not be able to get your exact locations in some verion of phones. ",
+			"8. You may become fancy and use NFC tag to launch SOS app and even jump to a page (e.g. go to 'Start Trip') as soon as you launch app. To do that click on the 'Hamburger  icon' on top left side of app. Now click 'NFC tags' from the menu items.One you are on NFC page toggle on the radio button to step into 'NFC write mode', default mode is 'NFC read mode'. Now tap a NFC tag that you want to configure. After that select which page you want to land on when you tap is tag to your phone. Now from this point onward whenever you tap this NFC tag, it will launch SOS app and take you to home page. Now tap the same tag one more time, you will be taken to the page that you have configured for this tag."
 			]
 
 },{"heading":"Saved Locations",

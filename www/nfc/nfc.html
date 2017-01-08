@@ -1,9 +1,11 @@
 <ion-view title="NFC" cache-view="false"  class="backhroundcolor">
-<ion-header-bar class="bar-positive">
-      <h1 class="title">Configure Action on NFC tag</h1>
-    </ion-header-bar>
- <ion-content class="padding">
+<ion-content class="padding">
  <span class="whitecolor">
+ <b>
+ <center>NFC tag can launch SOS app</center>
+  <center>Even take you to a page of your choice.</center>
+  </b>
+  <hr/>
  <label class="toggle">
    <input type="checkbox" ng-model="mydata.modeOfNFC" ng-change="changeOfNFCMode()">
    <div class="track">
@@ -11,20 +13,20 @@
    </div>
 </label>
 <b>
-<span ng-if="!mydata.modeOfNFC" >Read data from NFC tag</span>
-<span ng-if="mydata.modeOfNFC" >Write data to NFC tag</span>
+<span ng-if="!mydata.modeOfNFC" >It is NFC read mode</span>
+<span ng-if="mydata.modeOfNFC" >It is NFC write mode</span>
 </b>
 <br/><br/>
  <!-- Tag ID : {{mydata.currentTag.tagID}}<br/> -->
 <span ng-if="!mydata.modeOfNFC" > <b>Tag Action </b> : Move to {{mydata.currentTag.tagAction.name}} page</span>
  
-
+ <hr/>
  
  <span ng-if="mydata.modeOfNFC">
  
  <b>Steps to Configure Action on NFC tag</b> <br/><br/>
-	 <span ng-if="!mydata.currentTag"> Step 1. Please tap your phone to NFC card </span>
-	 <span ng-if="mydata.currentTag">Step 2. Please select an action
+	 <span ng-if="!mydata.currentTag"> Step 1. Please tap your phone to NFC card that you want to write</span>
+	 <span ng-if="mydata.currentTag">Step 2. Please select an action from below
 	<select  class="selectBox " ng-model="mydata.ActionForNewTag" ng-options="item  as item.name for item in mydata.listOfStates track by item.state"  style="width:150px;" ng-change="defineActionForTag()" >
 	 </select>
 	 </span>
