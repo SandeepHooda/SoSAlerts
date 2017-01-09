@@ -130,6 +130,17 @@ APP.SERVICES.service('dataRestore', function() {
 		}else {
 			myData.useChargerUnplugEvent = false;
 		}
+		
+		if (window.localStorage.getItem("listenShakeEvent") === 'true'){
+			myData.listenShakeEvent = true;
+		}else {
+			myData.listenShakeEvent = false;
+		}
+		if(window.localStorage.getItem("shakeIntensity") && window.localStorage.getItem("shakeIntensity") != null){
+			myData.shakeIntensity = parseInt(window.localStorage.getItem("shakeIntensity"));
+		}else {
+			myData.shakeIntensity = 15;
+		}
 		/*if (window.localStorage.getItem("cacheMyLocation") === 'true'){
 			myData.cacheMyLocation = true;
 		}else {

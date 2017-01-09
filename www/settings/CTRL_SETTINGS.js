@@ -11,6 +11,9 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 	if(!$scope.myData.frequencyOfRedAlerts){
 		$scope.myData.frequencyOfRedAlerts = 5;
 	}
+	if(!$scope.myData.shakeIntensity){
+		$scope.myData.shakeIntensity = 15;
+	}
 	/*if(!$scope.myData.cacheMyLocationFrequency){
 		$scope.myData.cacheMyLocationFrequency = 5;
 	}*/
@@ -21,9 +24,9 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 	if(!$scope.myData.useChargerUnplugEvent){
 		$scope.myData.useChargerUnplugEvent = false;
 	}
-	/*if(!$scope.myData.cacheMyLocation){
-		$scope.myData.cacheMyLocation = false;
-	}*/
+	if(!$scope.myData.listenShakeEvent){
+		$scope.myData.listenShakeEvent = false;
+	}
 	
 	
 	
@@ -33,13 +36,16 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 		window.localStorage.setItem("frequencyOfRedAlerts", $scope.myData.frequencyOfRedAlerts);
 		window.localStorage.setItem("mapType", $scope.myData.mapType);
 		window.localStorage.setItem("useChargerUnplugEvent", $scope.myData.useChargerUnplugEvent);
+		window.localStorage.setItem("listenShakeEvent", $scope.myData.listenShakeEvent);
+		window.localStorage.setItem("shakeIntensity", $scope.myData.shakeIntensity);
+		
 		/*window.localStorage.setItem("cacheMyLocation", $scope.myData.cacheMyLocation);
 		if($scope.myData.cacheMyLocation){
 			window.localStorage.setItem("cacheMyLocationFrequency", $scope.myData.cacheMyLocationFrequency);
 		}else {
 			window.localStorage.setItem("cacheMyLocationFrequency", "60");
 		}*/
-		
+		$scope.$emit('settingsChanged');
 	}
 	$ionicPlatform.ready( function() {
 		$scope.restoreFromStorage();

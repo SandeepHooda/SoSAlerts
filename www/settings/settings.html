@@ -5,27 +5,37 @@
  <ion-content class="padding">
   
 <span class="whitecolor">
-<b><span >Periodic alerts about my location {{myData.frequencyOfGreenAlerts}} minutes </span>
+<b><span >Frequency of Periodic alerts: {{myData.frequencyOfGreenAlerts}} minutes </span>
 <br/>
- <i class="ion-arrow-graph-down-left"></i> 
+ <i class="ion-ios-minus" ></i> 
  <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
-<i class="ion-arrow-graph-up-right"></i> 
+<i class="ion-ios-plus"></i> 
 <br/><br/>
-Red alerts about my location <span>{{myData.frequencyOfRedAlerts}}</span> seconds 
+Frequency of Red alerts: <span>{{myData.frequencyOfRedAlerts}}</span> seconds 
 <br/>
- <i class="ion-arrow-graph-down-left"></i> 
+ <i class="ion-ios-minus"></i> 
  <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfRedAlerts" min="5"  max="60" style=" width: 260px; height: 50px;">
- <i class="ion-arrow-graph-up-right"></i> 
-<br/><br/><br/>
+ <i class="ion-ios-plus"></i> 
 
+<br/><br/>
+<input type="checkbox"  style="height:30px;width:30px; " ng-model="myData.listenShakeEvent" ng-change="updateSettings()"> 
+&nbsp;&nbsp;&nbsp;<i class="ion-flash"></i>SOS alerts when I shake my phone 
+<br/>
+Selected Shake intensity: <span>{{myData.shakeIntensity}}</span>  
+<br/>
+ <i class="ion-ios-minus" ></i> 
+ <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.shakeIntensity" min="15"  max="50" style=" width: 260px; height: 50px;">
+<i class="ion-ios-plus"></i> 
+<br/><br/>
+<input type="checkbox"   style="height:30px;width:30px; " ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()"> 
+&nbsp;&nbsp;&nbsp;<i class="ion-battery-charging"></i>SOS alerts on charger un-plug at unknown location
+
+<br/><br/><br/>
+<div>My preferred map application</div>
 <input type="radio" name="map" ng-model="myData.mapType"  value="mapMyIndia" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Map my India
 <input type="radio" name="map" ng-model="myData.mapType"  value="googleMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Google maps
 <input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 30px; height: 30px;">  Both
 
-<br/><br/>
-<input type="checkbox"  ng-model="mydata.inactive5" style="height:30px;width:30px; " ng-model="myData.useChargerUnplugEvent" ng-change="updateSettings()"> 
-&nbsp;&nbsp;&nbsp;<i class="ion-battery-charging"></i>Charger unplug for Danger signal
-</ion-checkbox>
 </b>
 </span>
  </ion-content>
