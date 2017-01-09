@@ -1,15 +1,154 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate','nfcService',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate, nfcService){
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate','nfcService','$cordovaDeviceMotion',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate, nfcService,$cordovaDeviceMotion){
 	//cordova plugin add phonegap-nfc 
 	//cordova plugin add cordova-plugin-vibration
 	//cordova plugin add https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2
 	//cordova plugin add https://github.com/cowbell/cordova-plugin-geofence
 	//cordova plugin add cordova-plugin-vibration
+	//cordova plugin add cordova-plugin-device-motion
+	//cordova plugin add cordova-plugin-whitelist
+	//cordova plugin add cordova-plugin-shake
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
 	$scope.userLocationGoogle = "";
 	$scope.tag = nfcService.tag;
+	
+	
+
+	//function to call when shake occurs
+	$scope.shakeEventRedAlert = function() {
+		if($scope.myData.redAlert) return;
+		$scope.myData.redAlert = true;
+		$scope.redAlertOn();
+		$scope.$apply();
+        console.log('shake!');
+	}
+	
+	$scope.myShakeEvent = new Shake({
+	    threshold: 15, // optional shake strength threshold
+	    timeout: 1000 // optional, determines the frequency of event generation
+	});
+	$scope.registerShake = function() {
+		if ($scope.shakeEventRegistered) return;
+		window.addEventListener('shake', $scope.shakeEventRedAlert, false);
+		$scope.myShakeEvent.start();
+		console.log('shake Registered!');
+	}
+	
+	$scope.deRegisterShake = function() {
+		if (!$scope.shakeEventRegistered) return;
+		window.removeEventListener('shake', $scope.shakeEventRedAlert, false);
+		$scope.myShakeEvent.stop();
+		console.log('shake de-Registered!');
+	}
+	$scope.shakeEventRegistered =dataRestore.getFromCache('listenShakeEvent', 'boolean');
+	if($scope.shakeEventRegistered){
+		$scope.registerShake();
+	}
+
+	$rootScope.$on('settingsChanged',function(event, data){
+		$scope.myShakeEvent.options.threshold = dataRestore.getFromCache('shakeIntensity', 'number');
+		$scope.deRegisterShake();
+		$scope.shakeEventRegistered = false;
+		if(dataRestore.getFromCache('listenShakeEvent', 'boolean') && !$scope.shakeEventRegistered){
+			$scope.registerShake();
+			$scope.shakeEventRegistered = true;
+			
+		}else if($scope.shakeEventRegistered) {
+			$scope.deRegisterShake();
+			$scope.shakeEventRegistered = false;
+		}
+	});
+	
+	//Device shake mode
+	// watch Acceleration options
+	/*$scope.options = { 
+	    frequency: 100, // Measure every 100ms
+	    deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
+	};
+	 
+	// Current measurements
+	$scope.measurements = {
+	    x : null,
+	    y : null,
+	    z : null,
+	    timestamp : null
+	}
+	 
+	// Previous measurements    
+	$scope.previousMeasurements = {
+	    x : null,
+	    y : null,
+	    z : null,
+	    timestamp : null
+	}
+	// Watcher object
+    $scope.watch = null;
+	//Start Watching method
+	$scope.startWatching = function() {     
+		 console.log('Start watching');
+	    // Device motion configuration
+	    $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
+	 
+	    // Device motion initilaization
+	    $scope.watch.then(null, function(error) {
+	        console.log('Error in shake '+error);
+	    },function(result) {
+	 
+	        // Set current data  
+	        $scope.measurements.x = result.x;
+	        $scope.measurements.y = result.y;
+	        $scope.measurements.z = result.z;
+	        $scope.measurements.timestamp = result.timestamp;                 
+	 
+	        // Detecta shake  
+	        $scope.detectShake(result);  
+	 
+	    });     
+	};  
+	$scope.startWatching();
+	// Stop watching method
+	$scope.stopWatching = function() {  
+	    $scope.watch.clearWatch();
+	} 
+	
+	// Detect shake method      
+	$scope.detectShake = function(result) { 
+		 console.log('detect shake...');
+	    //Object to hold measurement difference between current and old data
+	    var measurementsChange = {};
+	 
+	    // Calculate measurement change only if we have two sets of data, current and old
+	    if ($scope.previousMeasurements.x !== null) {
+	        measurementsChange.x = Math.abs($scope.previousMeasurements.x, result.x);
+	        measurementsChange.y = Math.abs($scope.previousMeasurements.y, result.y);
+	        measurementsChange.z = Math.abs($scope.previousMeasurements.z, result.z);
+	    }
+	 
+	    // If measurement change is bigger then predefined deviation
+	    if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
+	        $scope.stopWatching();  // Stop watching because it will start triggering like hell
+	        console.log('Shake detected'); // shake detected
+	        setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sec
+	 
+	        // Clean previous measurements after succesfull shake detection, so we can do it next time
+	        $scope.previousMeasurements = { 
+	            x: null, 
+	            y: null, 
+	            z: null
+	        }               
+	 
+	    } else {
+	        // On first measurements set it as the previous one
+	        $scope.previousMeasurements = {
+	            x: result.x,
+	            y: result.y,
+	            z: result.z
+	        }
+	    }           
+	 
+	}  */
 	
 	$scope.myData.demoActionTaken = dataRestore.getFromCache("demoActionTaken",'boolean');;
 	$scope.demoActionTaken = function(){
@@ -66,37 +205,42 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			
 		}
 	}
+	
+	$scope.redAlertOff = function(){
+		$scope.myData.redAlert = false;
+		dataRestore.saveInCache('redAlert',$scope.myData.redAlert);
+		var confirmPopup = $ionicPopup.confirm({
+		     title: 'Safe Mode',
+		     template: 'Looks like everything is ok now. Do you want to turn of period green alerts?'
+		   });
+
+		   confirmPopup.then(function(res) {
+		     if(res) {
+		    	 $scope.myData.periodicAlerts = true;
+		     } else {
+		    	 $scope.myData.periodicAlerts = false;
+		     }
+		   });
+	}
+	$scope.redAlertOn = function(){
+		$scope.myData.redAlert = true;
+		dataRestore.saveInCache('redAlert',$scope.myData.redAlert);
+		
+		$scope.myData.periodicAlerts = false;// turn off period alerts as it is now emergency 
+		var mySettings = {};
+		dataRestore.restoreSettings(mySettings);
+		var activeContacts = dataRestore.getActiveContacts();
+		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+		setTimeout(function(){
+			$scope.sendRedAlertSMS(mySettings, activeContacts);
+		}, 1000*mySettings.frequencyOfRedAlerts);
+	}
 	//listen to alert button
 	$scope.toggleRedAlert = function(){
 		if($scope.myData.redAlert){
-			$scope.myData.redAlert = false;
-			var confirmPopup = $ionicPopup.confirm({
-			     title: 'Safe Mode',
-			     template: 'Looks like everything is ok now. Do you want to turn of period green alerts?'
-			   });
-
-			   confirmPopup.then(function(res) {
-			     if(res) {
-			    	 $scope.myData.periodicAlerts = true;
-			     } else {
-			    	 $scope.myData.periodicAlerts = false;
-			     }
-			   });
-			   
-			
-			
+			$scope.redAlertOff();   
 		}else {
-			
-			$scope.myData.redAlert = true;
-			$scope.myData.periodicAlerts = false;// turn off period alerts as it is now emergency 
-			var mySettings = {};
-			dataRestore.restoreSettings(mySettings);
-			var activeContacts = dataRestore.getActiveContacts();
-			navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
-			setTimeout(function(){
-				$scope.sendRedAlertSMS(mySettings, activeContacts);
-			}, 1000*mySettings.frequencyOfRedAlerts);
-			
+			$scope.redAlertOn();
 			
 		}
 	}
@@ -156,6 +300,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 	}
 	$scope.sendRedAlertSMS = function(settings, activeContacts){
+		console.log(" Sending Red alert")
 		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		var message =" I am in danger. My location is: "
 		if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
@@ -170,10 +315,13 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
 			}
 		}
-		if($scope.myData.redAlert){
+		if(dataRestore.getFromCache('redAlert','boolean')){
+			console.log(" Setting time out for Sending Red alert")
 			setTimeout(function(){
 				$scope.sendRedAlertSMS(settings,activeContacts);
 			}, 1000*settings.frequencyOfRedAlerts);
+		}else {
+			console.log(" Canceling Red alert")
 		}
 		
 	}
