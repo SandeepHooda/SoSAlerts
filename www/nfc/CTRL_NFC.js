@@ -1,5 +1,8 @@
 APP.CONTROLLERS.controller ('CTRL_NFC',['$scope','nfcService','dataRestore','$state','$ionicPopup',
     function($scope,nfcService,dataRestore,$state,$ionicPopup){
+	$scope.record = function() {
+		  dataRestore.record();
+	}
 	$scope.mydata = {};
 	$scope.mydata.listOfStates= dataRestore.listOfStates();
 	

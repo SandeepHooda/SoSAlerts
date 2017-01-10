@@ -590,15 +590,22 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		       });
 		  };
 		 
+		  $rootScope.$on('voiceCommandOver',function(event,recognisedText){
+			  $state.transitionTo(dataRestore.getStateName(recognisedText));
+		  })
 		  $scope.record = function() {
+			  dataRestore.record();
+			  /*
 		    var recognition = new SpeechRecognition();
 		    recognition.onresult = function(event) {
 		        if (event.results.length > 0) {
 		            $scope.recognizedText = event.results[0][0].transcript;
-		            $scope.$apply()
+		            $scope.$apply();
+		            $state.transitionTo(dataRestore.getStateName($scope.recognizedText));
+		          
 		        }
 		    };
-		    recognition.start();
+		    recognition.start();*/
 		  };
 		/*
 		if(SMS) {

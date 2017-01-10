@@ -1,4 +1,4 @@
-APP.SERVICES.service('dataRestore', function() {
+APP.SERVICES.service('dataRestore', function($rootScope) {
 	
 	this.saveInCache = function (key, value) {
 		window.localStorage.setItem(key, value)
@@ -321,5 +321,64 @@ APP.SERVICES.service('dataRestore', function() {
 			mydata.relationWithMe5 = ""
 		}
     }
+    
+    this.getStateName = function (someText) {
+    	if (!someText) return 'menu.tab.home';
+    	someText = someText.toLowerCase();
+    	if(someText.indexOf('location') >=0 ){
+        	return 'menu.tab.savedlocations';
+        }
+    	if(someText.indexOf('trip') >=0 ){
+        	return 'menu.tab.starttrip';
+        }
+    	if(someText.indexOf('near') >=0 ){
+        	return 'menu.tab.nearme';
+        }
+    	if(someText.indexOf('contact') >=0 ){
+        	return 'menu.contacts';
+        }
+    	if(someText.indexOf('setting') >=0 ){
+        	return 'menu.settings';
+        }
+    	if(someText.indexOf('nfc') >=0 ){
+        	return 'menu.nfc';
+        }
+    	if(someText.indexOf('about') >=0 ){
+        	return 'menu.about';
+        }
+    	if(someText.indexOf('demo') >=0 ){
+        	return 'menu.demo';
+        }
+    	
+    	
+    	return 'menu.tab.home';
+    }
+    
+    this.record = function() {
+    	TTS.speak({
+	           text: 'After the beep tell me which page do you want to navigate to? You can say things like settings, contact, my locations.',
+	           locale: 'en-GB',
+	           rate: 1
+	       }, function () {
+	           // Do Something after success
+	       }, function (reason) {
+	           // Handle the error case
+	       });
+    	
+	    var recognition = new SpeechRecognition();
+	    recognition.onresult = function(event) {
+	        if (event.results.length > 0) {
+	            var recognizedText = event.results[0][0].transcript;
+	            $rootScope.$emit('voiceCommandOver',recognizedText);
+	            
+	          
+	        }
+	    };
+	    
+	    setTimeout(function(){
+    		recognition.start();
+    	}, 9000);
+	    
+	  };
     
 });

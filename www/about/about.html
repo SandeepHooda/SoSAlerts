@@ -4,6 +4,7 @@
     </ion-header-bar>
 
     <ion-content>
+    <span ng-click="record()" class="whitecolor"> Navigate to &nbsp;&nbsp;<i class="ion-android-microphone"></i></span>
 <span ng-repeat="group in groups">
 <button class="accordion"  ng-click="toggleAccordian({{$index}})" id="accordionfaq{{$index}}">{{group.heading}}</button>
 <span ng-repeat="detail in group.details">

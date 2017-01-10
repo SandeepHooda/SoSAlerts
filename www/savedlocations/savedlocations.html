@@ -1,14 +1,16 @@
-<ion-view title="SavedLocations"  class="backhroundcolor">
+<ion-view title="Saved Locations"  class="backhroundcolor">
 <ion-header-bar class="bar-positive">
       <h1 class="title">Saved Locations</h1>
     </ion-header-bar>
  <ion-content class="padding">
+ <span ng-click="record()" class="whitecolor"> Navigate to &nbsp;&nbsp;<i class="ion-android-microphone"></i></span><br/>
 <label class="toggle">
    <input type="checkbox" ng-model="mydata.mapType">
    <div class="track">
      <div class="handle"></div>
    </div>
 </label>
+
 <span ng-if="mydata.mapType" class="whitecolor">Show location using Google maps</span>
 <span ng-if="!mydata.mapType" class="whitecolor">Show location using map my India</span>
 <br/>
