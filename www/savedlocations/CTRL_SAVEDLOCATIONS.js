@@ -141,7 +141,7 @@ APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ioni
 		}
 		//$ionicPlatform.ready( function() {
 			$scope.mydata.safeDistance = parseInt(window.localStorage.getItem('safeDistance'));
-			if (isNaN($scope.mydata.safeDistance)){
+			if (isNaN($scope.mydata.safeDistance) || $scope.mydata.safeDistance < 200 ){
 				$scope.mydata.safeDistance = 500;
 			}
 		//});

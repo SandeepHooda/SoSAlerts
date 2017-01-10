@@ -1,9 +1,13 @@
 APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$ionicPopup,dataRestore) {
 
     var tag = "#";
+   
+    window.localStorage.removeItem('mostRecentTag')
+    console.log(" Setting most recent tag to null")
     var tagReadTime = null;
     $ionicPlatform.ready(function() {
-    	nfc.addNdefListener(function (nfcEvent) {
+    	console.log(" Registerinh NFC")
+    	nfc.addNdefListener(function (nfcEvent) {//Called when NFC card is read
             //console.log(JSON.stringify(nfcEvent, null, 4));
     		var textData = "";
     		if (nfcEvent.tag && nfcEvent.tag.ndefMessage){
@@ -27,7 +31,7 @@ APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$i
                 
                 //if (dataRestore.getFromCache('changeOfNFCMode','boolean') == false){//in NFC read mode
                 	setTimeout(function(){
-                    	$state.transitionTo('menu.nfc');//rom NFC state we will redirect to the NFC action state
+                		$state.transitionTo('menu.nfc');//rom NFC state we will redirect to the NFC action state
         			});
                 	$state.transitionTo('menu.tab.home');
                 //}
