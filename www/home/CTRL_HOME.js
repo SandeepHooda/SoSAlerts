@@ -8,11 +8,22 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add cordova-plugin-device-motion
 	//cordova plugin add cordova-plugin-whitelist
 	//cordova plugin add cordova-plugin-shake
+	//cordova plugin add cordova-plugin-sms
+	//cordova plugin add cordova-plugin-android-permissions@0.6.0
+	//cordova plugin add cordova-plugin-tts
+	//cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
 	$scope.userLocationGoogle = "";
 	$scope.tag = nfcService.tag;
+	
+	$scope.data = {
+		    speechText: ''
+		  };
+		  $scope.recognizedText = '';
+		 
+		  
 	
 	
 
@@ -455,6 +466,9 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 		return withInSafeZone;
 	}
+	$scope.speakText = function(){
+		
+	}
 	 $scope.getDistanceFromLatLonInMeters = function(lat1,lon1,lat2,lon2) {
 		  var R = 6371; // Radius of the earth in km
 		  var dLat = $scope.deg2rad(lat2-lat1);  // deg2rad below  
@@ -478,9 +492,36 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		     title: 'No Contact details!',
 		     template: 'Please add contacts details so that we can send them your updates, when required.'
 		   });
-		$state.transitionTo('menu.contacts');
+		$scope.data.speechText = "Welcome and thanks for letting me help you. Please add your contact details here. Make sure you have atleast one contact detail here and that is not marked inactive. Also don't forget to save your location from My Locations page, when you are at home and when you are at work."
+		
+		setTimeout(function(){
+			$scope.$apply();
+			$scope.speakText();
+			$state.transitionTo('menu.contacts');
+		}, 5000);
+		
+		
+	}else {
+		$scope.data.speechText = " Welcome again, thanks for letting me help you."
+			setTimeout(function(){
+				var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
+				if(welcomeMsg == null || welcomeMsg == 'true'){
+					$scope.$apply();
+					$scope.speakText();
+				}
+				
+				if (window.localStorage.getItem("settingPageVisited") == null){
+					setTimeout(function(){
+						$scope.data.speechText = "Please visit settings page by clicking Hamburger icon on top left side of page, and then click settings. Please make sure you have the right settings that works best for you.";
+						$scope.$apply();
+						$scope.speakText();
+					},7000);
+					
+				}
+			}, 1000);
 	}
 	
+		
 	$scope.sendSMSWithLocationName = function(phoneNumber, message, showConfirmationAlert,locationName){
 		message += ' '+locationName
 		var options = {
@@ -535,7 +576,66 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	  $scope.noLocation = function() {
 		  
 	  }
+	 
 	$ionicPlatform.ready( function() {
+		$scope.speakText = function() {
+		    TTS.speak({
+		           text: $scope.data.speechText,
+		           locale: 'en-GB',
+		           rate: 1
+		       }, function () {
+		           // Do Something after success
+		       }, function (reason) {
+		           // Handle the error case
+		       });
+		  };
+		 
+		  $scope.record = function() {
+		    var recognition = new SpeechRecognition();
+		    recognition.onresult = function(event) {
+		        if (event.results.length > 0) {
+		            $scope.recognizedText = event.results[0][0].transcript;
+		            $scope.$apply()
+		        }
+		    };
+		    recognition.start();
+		  };
+		/*
+		if(SMS) {
+			
+			function checkPermissionCallback(status) { 
+		          if (!status.hasPermission) {
+		          var errorCallback = function () {
+		            console.log('no sms permisions');
+		            ionic.Platform.exitApp();
+		          }
+		          permissions.requestPermission(permissions.READ_SMS, function (status) {
+		            if (!status.hasPermission) errorCallback();
+		          }, errorCallback);
+		        }
+		      }
+		  var permissions = window.plugins.permissions;
+		  permissions.hasPermission(permissions.READ_SMS, checkPermissionCallback, null);
+		  
+			SMS.listSMS({}, function(data){
+				console.log('sms listed as json array');
+			//updateData( JSON.stringify(data) );
+			
+			var html = "";
+			if(Array.isArray(data)) {
+				for(var i in data) {
+					var sms = data[i];
+					
+					html += sms.address + ": " + sms.body + "<br/>";
+				}
+			}
+			console.log( html );
+			
+		}, function(err){
+			console.log('error list sms: ' + err);
+		});
+		}
+			*/
 		
 		// Enable background mode
 		cordova.plugins.backgroundMode.enable();
