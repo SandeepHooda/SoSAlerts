@@ -27,9 +27,16 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 	if(!$scope.myData.listenShakeEvent){
 		$scope.myData.listenShakeEvent = false;
 	}
+	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
+	if ( welcomeMsg == null || welcomeMsg == 'true'){
+		$scope.myData.playWelcomeMessage = true;
+		
+	}else {
+		$scope.myData.playWelcomeMessage = false;
+		
+	}
 	
-	
-	
+	window.localStorage.setItem("settingPageVisited",true);
 	
 	$scope.updateSettings = function(){
 		window.localStorage.setItem("frequencyOfGreenAlerts", $scope.myData.frequencyOfGreenAlerts);
@@ -38,6 +45,8 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 		window.localStorage.setItem("useChargerUnplugEvent", $scope.myData.useChargerUnplugEvent);
 		window.localStorage.setItem("listenShakeEvent", $scope.myData.listenShakeEvent);
 		window.localStorage.setItem("shakeIntensity", $scope.myData.shakeIntensity);
+		window.localStorage.setItem("playWelcomeMessage", $scope.myData.playWelcomeMessage);
+		
 		
 		/*window.localStorage.setItem("cacheMyLocation", $scope.myData.cacheMyLocation);
 		if($scope.myData.cacheMyLocation){
