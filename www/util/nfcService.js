@@ -40,10 +40,15 @@ APP.FACTORY.factory('nfcService', function ($rootScope, $ionicPlatform,$state,$i
         }, function () {
             console.log("Listening for NDEF Tags.");
         }, function (reason) {
-        	$ionicPopup.alert({
-			     title: 'Error adding NFC Listener',
-			     template: reason
-			   });
+        	if ('NO_NFC' != reason){
+        		$ionicPopup.alert({
+   			     title: 'Error adding NFC Listener',
+   			     template: reason
+   			   });
+        	}else {
+        		dataRestore.saveInCache('nfcError','NO_NFC' );
+        	}
+        	
             
         });
     	

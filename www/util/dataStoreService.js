@@ -20,6 +20,13 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 			}
 		}
 		
+		if (type === 'str' || type == undefined || type == null){
+			value = window.localStorage.getItem(key)
+			if (value == null || value == 'null'){
+				value = "";
+			}
+			
+		}
 		return value;
 	}
 	this.getGoogleKeyforLocationSrv = function(){
@@ -355,15 +362,23 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
     }
     
     this.record = function() {
-    	TTS.speak({
-	           text: 'After the beep tell me which page do you want to navigate to? You can say things like settings, contact, my locations.',
-	           locale: 'en-GB',
-	           rate: 1
-	       }, function () {
-	           // Do Something after success
-	       }, function (reason) {
-	           // Handle the error case
-	       });
+    	var delayTime = 0;
+    	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
+		if(welcomeMsg == null || welcomeMsg == 'true'){
+			delayTime = 9000;
+		}
+    	if (delayTime > 0){
+    		TTS.speak({
+ 	           text: 'After the beep tell me which page do you want to navigate to? You can say things like settings, contact, my locations.',
+ 	           locale: 'en-GB',
+ 	           rate: 1
+ 	       }, function () {
+ 	           // Do Something after success
+ 	       }, function (reason) {
+ 	           // Handle the error case
+ 	       });
+     	
+    	}
     	
 	    var recognition = new SpeechRecognition();
 	    recognition.onresult = function(event) {
@@ -377,7 +392,7 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 	    
 	    setTimeout(function(){
     		recognition.start();
-    	}, 9000);
+    	}, delayTime);
 	    
 	  };
     

@@ -4,6 +4,17 @@ APP.CONTROLLERS.controller ('CTRL_NFC',['$scope','nfcService','dataRestore','$st
 		  dataRestore.record();
 	}
 	$scope.mydata = {};
+	$scope.mydata.nfcAvailable = true;
+	var nfcErrorIfAny = dataRestore.getFromCache('nfcError' );
+	alert
+	if (nfcErrorIfAny == 'NO_NFC'){
+		$scope.mydata.nfcAvailable = false;
+		$ionicPopup.alert({
+			     title: 'NFC not available',
+			     template: 'Your phone donot support NFC tags'
+			   });
+	}
+	
 	$scope.mydata.listOfStates= dataRestore.listOfStates();
 	
 	$scope.mydata.ActionForNewTag = null;
