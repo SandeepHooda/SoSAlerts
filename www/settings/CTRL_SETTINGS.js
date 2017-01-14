@@ -1,8 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRestore',
     function($scope,$ionicPlatform,dataRestore){
-	$scope.record = function() {
-		  dataRestore.record();
-	}
+	
 	$scope.myData = {};
 	$scope.restoreFromStorage = function(){
 		dataRestore.restoreSettings($scope.myData);

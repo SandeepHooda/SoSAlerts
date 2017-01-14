@@ -1,8 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRestore','$state',
     function($scope,$ionicPlatform,dataRestore,$state){
-	$scope.record = function() {
-		  dataRestore.record();
-	}
+	
 		$scope.mydata = {}
 		$scope.mydata.allrelations = ["Mom", "Dad", "Honey", "Dear"];
 		$scope.mydata.contact1 = $scope.mydata.contact2 = $scope.mydata.contact3 = $scope.mydata.contact4 = $scope.mydata.contact5 ="";

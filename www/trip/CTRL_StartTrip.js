@@ -1,8 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform','dataRestore','$ionicPopup','$http','$ionicPopup','$rootScope',
     function($scope,$state,$ionicPlatform,dataRestore,$ionicPopup,$http,$ionicPopup,$rootScope){
-	$scope.record = function() {
-		  dataRestore.record();
-	}
+	
 	var mySettings = {};
 	dataRestore.restoreSettings(mySettings);
 	mySettings.frequencyOfRedAlerts

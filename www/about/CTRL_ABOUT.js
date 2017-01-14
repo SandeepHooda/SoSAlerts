@@ -1,8 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_ABOUT',['$scope','$http','dataRestore',
     function($scope,$http,dataRestore){
-	$scope.record = function() {
-		  dataRestore.record();
-	}
+	
 	var url = "";
 	if(ionic.Platform.isAndroid()){
 		url = "/android_asset/www/";

@@ -360,8 +360,41 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
     	
     	return 'menu.tab.home';
     }
-    
+    this.recognition = null; 
+    this.initSpeach = function(){
+    	if (this.recognition != null) return;
+    	this.recognition = new SpeechRecognition();
+    	//console#.log("new SpeechRecognition ")
+    	this.recognition.onresult = function(event) {
+	        if (event.results.length > 0) {
+	            var recognizedText = event.results[0][0].transcript;
+	            //console#.log(recognizedText)
+	            $rootScope.$emit('voiceCommandOver',recognizedText);
+	            
+	          
+	        }
+	    };
+	    this.recognition.onend = function(){
+	    	$rootScope.$emit('voiceCommandStop');
+	    	setTimeout(function(){
+	    		//console#.log(" Start again")
+	    		$rootScope.$emit('voiceCommandStartAgain');
+	    	},300)
+	    }
+	    
+	    
+	    
+    }
+    this.stopSpeach = function(){
+    	this.recognition.stop();
+    	this.recognition.abort();
+    }
+   this.recordingTime = new Date(); 
     this.record = function() {
+    	/*if ( (new Date().getTime() - this.recordingTime.getTime()) <100 ){
+    		return;
+    	}
+    	this.recordingTime = new Date();
     	var delayTime = 0;
     	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
 		if(welcomeMsg == 'true'){
@@ -378,21 +411,10 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
  	           // Handle the error case
  	       });
      	
-    	}
-    	
-	    var recognition = new SpeechRecognition();
-	    recognition.onresult = function(event) {
-	        if (event.results.length > 0) {
-	            var recognizedText = event.results[0][0].transcript;
-	            $rootScope.$emit('voiceCommandOver',recognizedText);
-	            
-	          
-	        }
-	    };
+    	}*/
+    	this.recognition.start()
+	   
 	    
-	    setTimeout(function(){
-    		recognition.start();
-    	}, delayTime);
 	    
 	  };
     

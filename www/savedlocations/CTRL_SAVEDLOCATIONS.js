@@ -1,8 +1,6 @@
 APP.CONTROLLERS.controller ('CTRL_SAVEDLOCATIONS',['$scope','dataRestore','$ionicPlatform','$state','$ionicPopup',
     function($scope,dataRestore,$ionicPlatform,$state,$ionicPopup){
-	$scope.record = function() {
-		  dataRestore.record();
-	}
+	
 	$scope.mydata = {};
 	$scope.mydata.safeDistance = 500;
 	$scope.updateSafeDistance = function(){
