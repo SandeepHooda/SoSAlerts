@@ -505,7 +505,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		$scope.data.speechText = " Welcome again, thanks for letting me help you."
 			setTimeout(function(){
 				var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
-				if(welcomeMsg == null || welcomeMsg == 'true'){
+				if(welcomeMsg == 'true'){
 					$scope.$apply();
 					$scope.speakText();
 				}

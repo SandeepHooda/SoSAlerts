@@ -364,7 +364,7 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
     this.record = function() {
     	var delayTime = 0;
     	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
-		if(welcomeMsg == null || welcomeMsg == 'true'){
+		if(welcomeMsg == 'true'){
 			delayTime = 9000;
 		}
     	if (delayTime > 0){

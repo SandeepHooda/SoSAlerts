@@ -31,7 +31,7 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 		$scope.myData.listenShakeEvent = false;
 	}
 	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
-	if ( welcomeMsg == null || welcomeMsg == 'true'){
+	if ( welcomeMsg == 'true'){
 		$scope.myData.playWelcomeMessage = true;
 		
 	}else {
