@@ -11,7 +11,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add cordova-plugin-sms
 	//cordova plugin add cordova-plugin-android-permissions@0.6.0
 	//cordova plugin add cordova-plugin-tts
-	//cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin
+	//cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin org.apache.cordova.speech.speechrecognition
+	//cordova plugin add https://github.com/SandeepHooda/Speachrecognization org.apache.cordova.speech.speechrecognition
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
@@ -33,7 +34,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		$scope.myData.redAlert = true;
 		$scope.redAlertOn();
 		$scope.$apply();
-        console.log('shake!');
+        //console#.log('shake!');
 	}
 	
 	$scope.myShakeEvent = new Shake({
@@ -44,14 +45,14 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		if ($scope.shakeEventRegistered) return;
 		window.addEventListener('shake', $scope.shakeEventRedAlert, false);
 		$scope.myShakeEvent.start();
-		console.log('shake Registered!');
+		//console#.log('shake Registered!');
 	}
 	
 	$scope.deRegisterShake = function() {
 		if (!$scope.shakeEventRegistered) return;
 		window.removeEventListener('shake', $scope.shakeEventRedAlert, false);
 		$scope.myShakeEvent.stop();
-		console.log('shake de-Registered!');
+		//console#.log('shake de-Registered!');
 	}
 	$scope.shakeEventRegistered =dataRestore.getFromCache('listenShakeEvent', 'boolean');
 	if($scope.shakeEventRegistered){
@@ -98,13 +99,13 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
     $scope.watch = null;
 	//Start Watching method
 	$scope.startWatching = function() {     
-		 console.log('Start watching');
+		 //console#.log('Start watching');
 	    // Device motion configuration
 	    $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
 	 
 	    // Device motion initilaization
 	    $scope.watch.then(null, function(error) {
-	        console.log('Error in shake '+error);
+	        //console#.log('Error in shake '+error);
 	    },function(result) {
 	 
 	        // Set current data  
@@ -126,7 +127,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	
 	// Detect shake method      
 	$scope.detectShake = function(result) { 
-		 console.log('detect shake...');
+		 //console#.log('detect shake...');
 	    //Object to hold measurement difference between current and old data
 	    var measurementsChange = {};
 	 
@@ -140,7 +141,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    // If measurement change is bigger then predefined deviation
 	    if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
 	        $scope.stopWatching();  // Stop watching because it will start triggering like hell
-	        console.log('Shake detected'); // shake detected
+	        //console#.log('Shake detected'); // shake detected
 	        setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sec
 	 
 	        // Clean previous measurements after succesfull shake detection, so we can do it next time
@@ -185,7 +186,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    alert(JSON.stringify(nfcEvent.tag));
 	}
 	function success(result) {
-	    console.log("Listening for NFC Messages");
+	    //console#.log("Listening for NFC Messages");
 	}
 	function failure(reason) {
 	    alert("Failed to add NDEF listener");
@@ -311,7 +312,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 	}
 	$scope.sendRedAlertSMS = function(settings, activeContacts){
-		console.log(" Sending Red alert")
+		//console#.log(" Sending Red alert")
 		navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 		var message =" I am in danger. My location is: "
 		if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
@@ -327,12 +328,12 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			}
 		}
 		if(dataRestore.getFromCache('redAlert','boolean')){
-			console.log(" Setting time out for Sending Red alert")
+			//console#.log(" Setting time out for Sending Red alert")
 			setTimeout(function(){
 				$scope.sendRedAlertSMS(settings,activeContacts);
 			}, 1000*settings.frequencyOfRedAlerts);
 		}else {
-			console.log(" Canceling Red alert")
+			//console#.log(" Canceling Red alert")
 		}
 		
 	}
@@ -578,6 +579,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	  }
 	 
 	$ionicPlatform.ready( function() {
+		dataRestore.initSpeach();
+		$scope.voiceRecordingOn = false;
 		$scope.speakText = function() {
 		    TTS.speak({
 		           text: $scope.data.speechText,
@@ -591,9 +594,29 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  };
 		 
 		  $rootScope.$on('voiceCommandOver',function(event,recognisedText){
+			 //console#.log("recognisedText = "+recognisedText)
 			  $state.transitionTo(dataRestore.getStateName(recognisedText));
 		  })
+		  $rootScope.$on('voiceCommandStartAgain',function(event){
+			  if (window.localStorage.getItem("voiceRecording") == "started"){
+				  dataRestore.record();
+			  }
+			    
+		  })
+		  $rootScope.$on('voiceCommandStop',function(event){
+			  if (window.localStorage.getItem("voiceRecording") == "started"){
+				  dataRestore.stopSpeach();
+			  }
+			    
+		  })
+		  $scope.StopRecording = function() {
+			  window.localStorage.removeItem("voiceRecording");
+			  $scope.voiceRecordingOn = false;
+			  
+		  }
 		  $scope.record = function() {
+			  $scope.voiceRecordingOn = true;
+			  window.localStorage.setItem("voiceRecording","started")
 			  dataRestore.record();
 			  /*
 		    var recognition = new SpeechRecognition();
@@ -613,7 +636,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			function checkPermissionCallback(status) { 
 		          if (!status.hasPermission) {
 		          var errorCallback = function () {
-		            console.log('no sms permisions');
+		            //console#.log('no sms permisions');
 		            ionic.Platform.exitApp();
 		          }
 		          permissions.requestPermission(permissions.READ_SMS, function (status) {
@@ -625,7 +648,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  permissions.hasPermission(permissions.READ_SMS, checkPermissionCallback, null);
 		  
 			SMS.listSMS({}, function(data){
-				console.log('sms listed as json array');
+				//console#.log('sms listed as json array');
 			//updateData( JSON.stringify(data) );
 			
 			var html = "";
@@ -636,10 +659,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 					html += sms.address + ": " + sms.body + "<br/>";
 				}
 			}
-			console.log( html );
+			//console#.log( html );
 			
 		}, function(err){
-			console.log('error list sms: ' + err);
+			//console#.log('error list sms: ' + err);
 		});
 		}
 			*/
@@ -791,16 +814,16 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		        data:           Object  //Custom object associated with notification
 		    }
 		}).then(function () {
-		    console.log('Geofence successfully added');
+		    //console#.log('Geofence successfully added');
 		}, function (reason) {
-		    console.log('Adding geofence failed', reason);
+		    //console#.log('Adding geofence failed', reason);
 		});
 	}
 	
 	window.geofence.initialize().then(function () {
-	        console.log("Successful initialization");
+	        //console#.log("Successful initialization");
 	    }, function (error) {
-	        console.log("Error", error);
+	        //console#.log("Error", error);
 	    });
 	*/
 	  
