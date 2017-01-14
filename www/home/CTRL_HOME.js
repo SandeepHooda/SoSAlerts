@@ -599,7 +599,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  })
 		  $rootScope.$on('voiceCommandStartAgain',function(event){
 			  if (window.localStorage.getItem("voiceRecording") == "started"){
-				  dataRestore.record();
+				  $scope.StartVoiceRecognizationNow();
 			  }
 			    
 		  })
@@ -615,58 +615,35 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			  dataRestore.unmuteStreamVolume();
 			  
 		  }
-		  $scope.record = function() {
+		  $scope.StartVoiceRecognizationNow = function(){
 			  $scope.voiceRecordingOn = true;
-			  window.localStorage.setItem("voiceRecording","started")
+			  window.localStorage.setItem("voiceRecording","started");
 			  dataRestore.record();
-			  /*
-		    var recognition = new SpeechRecognition();
-		    recognition.onresult = function(event) {
-		        if (event.results.length > 0) {
-		            $scope.recognizedText = event.results[0][0].transcript;
-		            $scope.$apply();
-		            $state.transitionTo(dataRestore.getStateName($scope.recognizedText));
-		          
-		        }
-		    };
-		    recognition.start();*/
-		  };
-		/*
-		if(SMS) {
-			
-			function checkPermissionCallback(status) { 
-		          if (!status.hasPermission) {
-		          var errorCallback = function () {
-		            //console#.log('no sms permisions');
-		            ionic.Platform.exitApp();
-		          }
-		          permissions.requestPermission(permissions.READ_SMS, function (status) {
-		            if (!status.hasPermission) errorCallback();
-		          }, errorCallback);
-		        }
-		      }
-		  var permissions = window.plugins.permissions;
-		  permissions.hasPermission(permissions.READ_SMS, checkPermissionCallback, null);
-		  
-			SMS.listSMS({}, function(data){
-				//console#.log('sms listed as json array');
-			//updateData( JSON.stringify(data) );
-			
-			var html = "";
-			if(Array.isArray(data)) {
-				for(var i in data) {
-					var sms = data[i];
-					
-					html += sms.address + ": " + sms.body + "<br/>";
+		  }
+		  $scope.record = function() {
+			  var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
+				if(welcomeMsg == 'true'){
+					delayTime = 8000;
 				}
-			}
-			//console#.log( html );
-			
-		}, function(err){
-			//console#.log('error list sms: ' + err);
-		});
-		}
-			*/
+				if (delayTime > 0){
+		    		TTS.speak({
+		 	           text: 'Tell me which page do you want to navigate to? You can say things like settings, contact, my locations.',
+		 	           locale: 'en-GB',
+		 	           rate: 1
+		 	       }, function () {
+		 	    	  $scope.StartVoiceRecognizationNow();
+		 	       }, function (reason) {
+		 	           // Handle the error case
+		 	       });
+		     	
+		    	}else {
+		    		 $scope.StartVoiceRecognizationNow();
+		    	}
+		    
+			  
+			 
+		  };
+		
 		
 		// Enable background mode
 		cordova.plugins.backgroundMode.enable();
