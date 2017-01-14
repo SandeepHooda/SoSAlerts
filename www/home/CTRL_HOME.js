@@ -612,6 +612,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  $scope.StopRecording = function() {
 			  window.localStorage.removeItem("voiceRecording");
 			  $scope.voiceRecordingOn = false;
+			  dataRestore.unmuteStreamVolume();
 			  
 		  }
 		  $scope.record = function() {

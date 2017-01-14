@@ -385,6 +385,9 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 	    
 	    
     }
+    this.unmuteStreamVolume = function(){
+    	this.recognition.unmute();
+    }
     this.stopSpeach = function(){
     	this.recognition.stop();
     	this.recognition.abort();
