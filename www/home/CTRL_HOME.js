@@ -13,6 +13,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add cordova-plugin-tts
 	//cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin org.apache.cordova.speech.speechrecognition
 	//cordova plugin add https://github.com/SandeepHooda/Speachrecognization org.apache.cordova.speech.speechrecognition
+	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
 	$scope.userLocation ="";
@@ -578,7 +579,70 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  
 	  }
 	 
+	  $scope.readSMS = function(){
+		  var filter = {
+	                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+
+	                // following 4 filters should NOT be used together, they are OR relationship
+	                read : 0, // 0 for unread SMS, 1 for SMS already read
+	               // _id : 1234, // specify the msg id
+	                //address : '+8613601234567', // sender's phone number
+	                //body : 'You missed  a call from me at 8:38 AM.', // content to match
+
+	                // following 2 filters can be used to list page up/down
+	                indexFrom : 0, // start from index 0
+	                maxCount : 10, // count of SMS to return each time
+	            };
+			SMS.listSMS(filter, function(data){
+  			if(Array.isArray(data)) {
+      			for(var i in data) {
+      				var sms = data[i];
+      				
+      				console.log( sms.address + ": " + sms.body );
+      			}
+      		}
+      		
+      		
+      	}, function(err){
+      		console.log('error list sms: ' + err);
+      	}); 
+	  }
+	  
+	 
 	$ionicPlatform.ready( function() {
+		
+		if(SMS) {
+			
+			function checkPermissionCallback(status){
+				 if (!status.hasPermission) {
+					 
+			          var errorCallback = function () {
+			            console.log('no sms permisions');
+			          }
+			          console.log('requesting permisions');
+			          
+			          permissions.requestPermission( function (status) {
+			        	  
+			            if (!status.hasPermission) {
+			            	errorCallback();
+			            }else {
+			            	
+			            	$scope.readSMS();
+			            }
+			          }, errorCallback,permissions.READ_SMS);
+			          
+			        }else {
+			        	 
+			        	$scope.readSMS();
+			        }
+			} 
+			
+			var permissions = window.plugins.permissions;
+			permissions.hasPermission(checkPermissionCallback, null, permissions.READ_SMS);
+		}else {
+			console.log(" No SMS- not a phone" );
+		}
+		
 		dataRestore.initSpeach();
 		$scope.voiceRecordingOn = false;
 		$scope.speakText = function() {
