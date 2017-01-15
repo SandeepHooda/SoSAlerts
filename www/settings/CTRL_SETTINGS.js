@@ -28,6 +28,12 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 	if(!$scope.myData.listenShakeEvent){
 		$scope.myData.listenShakeEvent = false;
 	}
+	if(!$scope.myData.anounceSMSText){
+		$scope.myData.anounceSMSText = false;
+	}
+	if(!$scope.myData.autoReplyToWRU){
+		$scope.myData.autoReplyToWRU = false;
+	}
 	var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
 	if ( welcomeMsg == 'true'){
 		$scope.myData.playWelcomeMessage = true;
@@ -47,14 +53,10 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 		window.localStorage.setItem("listenShakeEvent", $scope.myData.listenShakeEvent);
 		window.localStorage.setItem("shakeIntensity", $scope.myData.shakeIntensity);
 		window.localStorage.setItem("playWelcomeMessage", $scope.myData.playWelcomeMessage);
+		window.localStorage.setItem("anounceSMSText", $scope.myData.anounceSMSText);
+		window.localStorage.setItem("autoReplyToWRU", $scope.myData.autoReplyToWRU);
 		
 		
-		/*window.localStorage.setItem("cacheMyLocation", $scope.myData.cacheMyLocation);
-		if($scope.myData.cacheMyLocation){
-			window.localStorage.setItem("cacheMyLocationFrequency", $scope.myData.cacheMyLocationFrequency);
-		}else {
-			window.localStorage.setItem("cacheMyLocationFrequency", "60");
-		}*/
 		$scope.$emit('settingsChanged');
 	}
 	$ionicPlatform.ready( function() {

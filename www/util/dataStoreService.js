@@ -143,6 +143,18 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 		}else {
 			myData.listenShakeEvent = false;
 		}
+		
+		if (window.localStorage.getItem("anounceSMSText") === 'true'){
+			myData.anounceSMSText = true;
+		}else {
+			myData.anounceSMSText = false;
+		}
+		if (window.localStorage.getItem("autoReplyToWRU") === 'true' || null == window.localStorage.getItem("autoReplyToWRU")){
+			myData.autoReplyToWRU = true;
+		}else {
+			myData.autoReplyToWRU = false;
+		}
+		
 		if(window.localStorage.getItem("shakeIntensity") && window.localStorage.getItem("shakeIntensity") != null){
 			myData.shakeIntensity = parseInt(window.localStorage.getItem("shakeIntensity"));
 		}else {
@@ -160,6 +172,44 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 			useChargerUnplugEvent = true;
 		}
     	return useChargerUnplugEvent;
+    }
+    this.isInContactList = function(number){
+    	var contact = null;
+    	var mydata = {};
+    	this.restoreContacts (mydata);
+    	mydata.inactive1 = window.localStorage.getItem("inactive1");
+		mydata.contact1 = window.localStorage.getItem("contact1");
+		mydata.relationWithMe1 = window.localStorage.getItem("relationWithMe1");
+    	if (mydata.contact1 == number ){
+    		contact = {};
+    		contact.phoneNo = number;
+    		contact.relationWithMe = mydata.relationWithMe1;
+    	}
+    	
+    	if (mydata.contact2 == number ){
+    		contact = {};
+    		contact.phoneNo = number;
+    		contact.relationWithMe = mydata.relationWithMe2;
+    	}
+    	
+    	if (mydata.contact3 == number ){
+    		contact = {};
+    		contact.phoneNo = number;
+    		contact.relationWithMe = mydata.relationWithMe3;
+    	}
+    	
+    	if (mydata.contact4 == number ){
+    		contact = {};
+    		contact.phoneNo = number;
+    		contact.relationWithMe = mydata.relationWithMe4;
+    	}
+    	
+    	if (mydata.contact5 == number ){
+    		contact = {};
+    		contact.phoneNo = number;
+    		contact.relationWithMe = mydata.relationWithMe5;
+    	}
+    	return contact;
     }
     this.getActiveContacts = function (){
     	var mydata = {};

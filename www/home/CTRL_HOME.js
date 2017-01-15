@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','$ionicSideMenuDelegate','nfcService','$cordovaDeviceMotion',
-    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, $ionicSideMenuDelegate, nfcService,$cordovaDeviceMotion){
+APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashlight','$ionicPlatform','$rootScope','$cordovaMedia','dataRestore','$state','$ionicPopup','$http','nfcService','$cordovaDeviceMotion',
+    function($scope,$cordovaSms,$cordovaFlashlight,$ionicPlatform,$rootScope,$cordovaMedia,dataRestore,$state,$ionicPopup,$http, nfcService,$cordovaDeviceMotion){
 	//cordova plugin add phonegap-nfc 
 	//cordova plugin add cordova-plugin-vibration
 	//cordova plugin add https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2
@@ -13,6 +13,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add cordova-plugin-tts
 	//cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin org.apache.cordova.speech.speechrecognition
 	//cordova plugin add https://github.com/SandeepHooda/Speachrecognization org.apache.cordova.speech.speechrecognition
+	//cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git
+	//cordova plugin add cordova-plugin-whitelist
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
@@ -197,9 +199,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	
 	$scope.myData.periodicAlerts = false;
 	$scope.myData.redAlert = false;
-	$scope.showMenu = function () {
-	    $ionicSideMenuDelegate.toggleLeft();
-	  };
+	
 	$scope.vibrate = function(){
 		
 		navigator.vibrate(1000);
@@ -578,7 +578,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	  $scope.noLocation = function() {
 		  
 	  }
-	 
+	 //startWatch(successCallback, failureCallback onSMSArrive https://github.com/floatinghotpot/cordova-plugin-sms/tree/master/docs
 	  $scope.readSMS = function(){
 		  var filter = {
 	                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -598,28 +598,92 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
       			for(var i in data) {
       				var sms = data[i];
       				
-      				console.log( sms.address + ": " + sms.body );
+      				//console#.log( sms.address + ": " + sms.body );
       			}
       		}
       		
       		
       	}, function(err){
-      		console.log('error list sms: ' + err);
+      		//console#.log('error list sms: ' + err);
       	}); 
 	  }
-	  
-	 
-	$ionicPlatform.ready( function() {
+	  $scope.replyToWRU = function(phoneNo){
+		  if (null != phoneNo && phoneNo.length > 10){
+			  var extra = phoneNo.length - 10;
+			  phoneNo = phoneNo.substring(extra)
+		  }
+		  var contact = dataRestore.isInContactList(phoneNo);
+		  if (null != contact){
+			  //console#.log(contact.relationWithMe + " wants to know where are you?")
+			  /*TTS.speak({
+		           text: contact.relationWithMe + " wants to know where are you?",
+		           locale: 'en-GB',
+		           rate: 1
+		       }, function () {
+		           // Do Something after success
+		       }, function (reason) {
+		           // Handle the error case
+		       });*/
+		  }
+		  
+	  }
+	  $scope.smsMonitoringStarted = false;
+	$scope.monitorSMS = function(){
+		if(!$scope.smsMonitoringStarted ){
+			$scope.smsMonitoringStarted = true;
+			SMS.startWatch(function(){
+	            //console#.log("SMS monitoring started");
+	            document.addEventListener('onSMSArrive', function(e){
+	                var sms = e.data;
+	                ////console#.log('SMS arrived, count: ' + sms.body );
+	                var anounceSMSText = dataRestore.getFromCache("anounceSMSText","boolean")
+	                if(anounceSMSText){
+	                	TTS.speak({
+	 	 		           text: sms.body,
+	 	 		           locale: 'en-GB',
+	 	 		           rate: 1
+	 	 		       }, function () {
+	 	 		           // Do Something after success
+	 	 		       }, function (reason) {
+	 	 		           // Handle the error case
+	 	 		       });
+	                }
+	                var smsBody = sms.body.toLowerCase();
+	                //console#.log(" smsBody ="+smsBody)
+	                if (smsBody == "wru" || smsBody == "where are you" || smsBody == "whr r u"){
+	                	var autoReplyToWRU = (window.localStorage.getItem("autoReplyToWRU") === 'true' || null == window.localStorage.getItem("autoReplyToWRU"))
+		                if(autoReplyToWRU){
+		                	$scope.replyToWRU(sms.address);
+		                }
+	                }
+	                
+	                
+	            });
+	        }, function(){
+	        	//console#.log("SMS monitoring failed");
+	        });
+		}
 		
+	}
+	 $scope.deviceReady = false;
+	$ionicPlatform.ready( function() {
+		for(var i=0; i<100000;i++){
+			a =6;
+			b=7;
+			c= a+b;
+		}
+		if ($scope.deviceReady) return;
+		$scope.deviceReady = true;
+		//console#.log('Plat form ready $ ##########################');
 		if(SMS) {
-			
+			$scope.monitorSMS();
 			function checkPermissionCallback(status){
 				 if (!status.hasPermission) {
 					 
 			          var errorCallback = function () {
-			            console.log('no sms permisions');
+			            //console#.log('no sms permisions');
 			          }
-			          console.log('requesting permisions');
+			          //console#.log('requesting permisions');
 			          
 			          permissions.requestPermission( function (status) {
 			        	  
@@ -640,7 +704,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			var permissions = window.plugins.permissions;
 			permissions.hasPermission(checkPermissionCallback, null, permissions.READ_SMS);
 		}else {
-			console.log(" No SMS- not a phone" );
+			//console#.log(" No SMS- not a phone" );
 		}
 		
 		dataRestore.initSpeach();
@@ -711,6 +775,21 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 		// Enable background mode
 		cordova.plugins.backgroundMode.enable();
+		cordova.plugins.backgroundMode.onactivate = function() {
+		   
+			/*setTimeout(function(){
+				TTS.speak({
+			           text: 'Please don\'t put SOS alert in background. You may lock your phone though.',
+			           locale: 'en-GB',
+			           rate: 1
+			       }, function () {
+			           // Do Something after success
+			       }, function (reason) {
+			           // Handle the error case
+			       });
+			},100);*/
+			}
+		
 		cordova.plugins.autoStart.enable(); 
 		
 		//Ask for location permission from user
@@ -738,137 +817,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		});
 			
 			//setTimeout(function(){}, 2000);
-		
-		
-       
-		
-		
-		 
-		  
-		 
-		  
-		});
+			  
+		});//Platform ready
 	
-	/*$scope.checkIfNFCScanned = function(){
-		var tagData = window.localStorage.getItem('mostRecentTag');
-		if (null != tagData){
-			if ( ((new Date()).getTime() - nfcService.getTagReadTime().getTime()) < 2000 ){// Tag just read
-				var moveToState = dataRestore.getNfcAction(tagData);
-				if (null != moveToState){
-					$state.transitionTo(moveToState);
-				}
-				
-			}
-		}
-		
-	}
-	$scope.checkIfNFCScanned();*/
+	
 	 
-	  /*$scope.mapMe = function(){
-			cordova.plugins.diagnostic.isLocationAvailable(function(available){
-			   if(!available){
-				   cordova.plugins.diagnostic.switchToLocationSettings();
-			   }else{
-				   navigator.geolocation.getCurrentPosition($scope.foundLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true}); 
-			   }
-			}, function(error){
-			    console.error("The following error occurred: "+error);
-			});
-			
-			
-		}*/
-	  /*$scope.sendEmail = function(){
-		  cordova.plugins.diagnostic.isLocationAvailable(function(available){
-			   if(!available){
-				   cordova.plugins.diagnostic.switchToLocationSettings();
-			   }else{
-				   navigator.geolocation.getCurrentPosition($scope.emailWithLocation, noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true}); 
-			   }
-			}, function(error){
-			    console.error("The following error occurred: "+error);
-			});
-		  
-		  
-	  }
-	$scope.emailWithLocation = function(position){
-		 var lat = position.coords.latitude;
-		    var lon = position.coords.longitude;
-		    $scope.userLocation = lat + ',' + lon;
-		    $scope.userLocationGoogle = $scope.userLocation+',15z';
-		    
-		cordova.plugins.email.open({
-		    to:      'sonu.hooda@gmail.com',
-		    subject: 'Save me',
-		    body:    'Map my india Maps '+'https://maps.mapmyindia.com/@'+$scope.userLocation +'<br/>'+'Google maps '+'https://www.google.co.in/maps/@'+$scope.userLocationGoogle
-		});
-	}  
-	$scope.mapMe = function(){
-		cordova.plugins.diagnostic.isLocationAvailable(function(available){
-		   if(!available){
-			   cordova.plugins.diagnostic.switchToLocationSettings();
-		   }else{
-			   navigator.geolocation.getCurrentPosition(foundLocation, noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true}); 
-		   }
-		}, function(error){
-		    console.error("The following error occurred: "+error);
-		});
-		
-		
-	}
-	  var onShake = function () {
-		  $cordovaFlashlight.toggle()
-		    .then(
-		      function (success) {  },
-		      function (error) {  });
-		 
-		  //alert('Stop shaking me');
-		};
-
-		var onError = function () {
-		  // Fired when there is an accelerometer error (optional)
-		};
-
-		$scope.enableShake =function(){
-			// Start watching for shake gestures and call "onShake"
-			// with a shake sensitivity of 40 (optional, default 30)
-			shake.startWatch(onShake, 40 );
-		}
-		
-		$scope.disableShake =function(){
-			// Stop watching for shake gestures
-			shake.stopWatch();
-		}*/
-	  /*$scope.addFence = function(){
-		window.geofence.addOrUpdate({
-		    id:             "Home", //A unique identifier of geofence
-		    latitude:       Number, //Geo latitude of geofence
-		    longitude:      Number, //Geo longitude of geofence
-		    radius:         Number, //Radius of geofence in meters
-		    transitionType: Number, //Type of transition 1 - Enter, 2 - Exit, 3 - Both
-		    notification: {         //Notification object
-		        id:             Number, //optional should be integer, id of notification
-		        title:          String, //Title of notification
-		        text:           String, //Text of notification
-		        smallIcon:      String, //Small icon showed in notification area, only res URI
-		        icon:           String, //icon showed in notification drawer
-		        openAppOnClick: Boolean,//is main app activity should be opened after clicking on notification
-		        vibration:      [Integer], //Optional vibration pattern - see description
-		        data:           Object  //Custom object associated with notification
-		    }
-		}).then(function () {
-		    //console#.log('Geofence successfully added');
-		}, function (reason) {
-		    //console#.log('Adding geofence failed', reason);
-		});
-	}
-	
-	window.geofence.initialize().then(function () {
-	        //console#.log("Successful initialization");
-	    }, function (error) {
-	        //console#.log("Error", error);
-	    });
-	*/
-	  
-		
+	  	
 	}
 ])

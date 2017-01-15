@@ -39,6 +39,10 @@ Selected Shake intensity: <span>{{myData.shakeIntensity}}</span>
 <input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 20px; height: 20px;">  Both</input>
 <hr/>
 <input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.playWelcomeMessage" ng-change="updateSettings()"> Turn on voice assistance for app navigation</input>
+<hr/>
+<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.anounceSMSText" ng-change="updateSettings()"> Announce SMS text</input>
+<hr/>
+<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.autoReplyToWRU" ng-change="updateSettings()"> Reply to 'WRU (i.e.Where are you) SMS'</input>
 </b>
 </span>
  </ion-content>
