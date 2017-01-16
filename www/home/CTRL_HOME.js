@@ -280,7 +280,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 				var findLocation = $scope.LocationInSafeZone(parseFloat(location[0]), parseFloat(location[1]));
 				
 				if (findLocation.withInSafeZone && messagePassed === ''){
-					message = "I reached "+findLocation.NameOfLocation+" safely. My location is: "
+					message = " I reached "+findLocation.NameOfLocation+" safely. My location is: "
 				}
 			}
 			
@@ -657,14 +657,14 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	  $scope.phoneLostAlertShown = false;
 	  $scope.findMyPhone = function(phoneNo) {
 		  if(!$scope.phoneLostAlertShown){
-			  dataRestore.unmuteStreamVolume();
+			  dataRestore.unmuteVolume();
 			  $scope.phoneLostAlertShown = true;
 			  $scope.isPhoneFound();
 		  }
 		  if (!$scope.phonefound){
 			  $scope.vibrate();
 			  TTS.speak({
-	          text: "Here I am , Here I am, How do you do?",
+	          text: "Here I am , Here I am.",
 	          locale: 'en-GB',
 	          rate: 1
 		      }, function () {
@@ -684,6 +684,12 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		  
 		  if (null != contact){
 			  $scope.getLocationFirst(phoneNo, contact.relationWithMe);
+			  setTimeout(function(){
+				  $ionicPopup.alert({
+					     title: contact.relationWithMe+' wants to know where are you?',
+					     template: ''
+					   }); 
+			  },100)
 			  
 		  }else {
 			 
@@ -738,7 +744,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	 	 		           // Handle the error case
 	 	 		       });
 	                }
-	                var smsBody = sms.body.toLowerCase();
+	                var smsBody = sms.body.toLowerCase().trim();
 	                //console#.log(" smsBody ="+smsBody)
 	                if (smsBody == "wru" || smsBody == "where are you" || smsBody == "whr r u"){
 	                	var autoReplyToWRU = (window.localStorage.getItem("autoReplyToWRU") === 'true' || null == window.localStorage.getItem("autoReplyToWRU"))
@@ -837,6 +843,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			  dataRestore.record();
 		  }
 		  $scope.record = function() {
+			  var delayTime = 0;
 			  var welcomeMsg = window.localStorage.getItem("playWelcomeMessage");
 				if(welcomeMsg == 'true'){
 					delayTime = 8000;

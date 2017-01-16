@@ -267,10 +267,10 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 			}, $scope.timeout);
 			$scope.displayTimeLeft(false);
 			
-			$scope.$emit('sendSMS','I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft);
+			$scope.$emit('sendSMS',' I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft);
 			$ionicPopup.alert({
 			     title: 'Start my journey!',
-			     template: 'I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft
+			     template: ' I have started for '+$scope.mydata.activeTrip.name+'. I am expected to reach there in'+$scope.mydata.timeLeft
 			   });
 		}
 		

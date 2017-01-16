@@ -497,8 +497,13 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 	    
     }
     this.unmuteVolume = function(){
-    	this.recognition = new SpeechRecognition();
-    	this.recognition.unmute();
+    	var recognition = new SpeechRecognition();
+    	recognition.onresult = function(event) {
+    		
+    	}
+    	recognition.start();
+    	recognition.unmute();
+    	
     }
     this.unmuteStreamVolume = function(){
     	this.recognition.unmute();
