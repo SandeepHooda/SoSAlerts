@@ -1,5 +1,5 @@
-APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRestore','$state',
-    function($scope,$ionicPlatform,dataRestore,$state){
+APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRestore','$state','$ionicPopup',
+    function($scope,$ionicPlatform,dataRestore,$state,$ionicPopup){
 	
 		$scope.mydata = {}
 		$scope.mydata.allrelations = ["Mom", "Dad", "Honey", "Dear"];
@@ -34,6 +34,29 @@ APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRest
 		$ionicPlatform.ready( function() {
 			$scope.restoreFromStorage();
 		});
-		//$state.transitionTo('menu.tab.home');
+		//dataRestore.addWRUContacts("9216");
+		//window.localStorage.setItem("getWRUContacts","");
+		$scope.getWruContacts = function(){
+			$scope.mydata.otherKnownContacts = dataRestore.getWRUContacts(); 
+			
+		}
+		$scope.getWruContacts();
+		$scope.deleteContact = function(index){
+			var confirmPopup = $ionicPopup.confirm({
+			     title: 'Delete contact',
+			     template: 'Are you sure you want to delete this contact?'
+			   });
+
+			   confirmPopup.then(function(res) {
+			     if(res) {
+			    	 dataRestore.deleteWRUContacts($scope.mydata.otherKnownContacts[index]); 
+						$scope.mydata.otherKnownContacts = dataRestore.getWRUContacts();
+						
+			     }
+			   })
+			
+			
+		}
+		
 	}
 ])

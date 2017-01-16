@@ -607,16 +607,89 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
       		//console#.log('error list sms: ' + err);
       	}); 
 	  }
+	  
+	  $scope.wruPhoneNo = "";
+	  $scope.wruPhoneRelation = "";
+	  $scope.NowReplyToWRU = function(position){
+		  var lat = position.coords.latitude;
+		    var lon = position.coords.longitude;
+		    $scope.userLocation = lat + ',' + lon;
+		    $scope.userLocationGoogle = $scope.userLocation+',15z';
+		    var settings = {};
+			dataRestore.restoreSettings(settings);
+			var locationLink = "";
+			if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
+				locationLink += ' https://www.google.co.in/maps/@'+$scope.userLocationGoogle;
+			}
+			if (settings.mapType === 'mapMyIndia'  || settings.mapType === 'bothMaps'){
+				locationLink +=' https://maps.mapmyindia.com/@'+$scope.userLocation
+			}
+			
+			$scope.sendSMS ($scope.wruPhoneNo,$scope.wruPhoneRelation+ " my location is "+ locationLink, false);
+	  }
+	  
+	  $scope.getLocationFirst = function(phoneNo, wruPhoneRelation){
+		  $scope.wruPhoneNo = phoneNo;
+		  $scope.wruPhoneRelation = wruPhoneRelation;
+		  navigator.geolocation.getCurrentPosition($scope.NowReplyToWRU, $scope.NowReplyToWRU, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});  
+	  }
+	  
+	  $scope.isPhoneFound = function(){
+		  setTimeout(function(){
+			  var confirmPopup = $ionicPopup.confirm({
+				     title: 'Glad to meet you!',
+				     template: ""
+				   });
+
+				   confirmPopup.then(function(res) {
+				     if(res) {
+				    	 $scope.phonefound = true;
+				    	// $scope.$apply();
+				     } else {
+				    	 $scope.phonefound = true;
+				    	// $scope.$apply();
+				     }
+				   });
+		  }, 2000);
+		  
+	  }
+	  $scope.phonefound = false;
+	  $scope.phoneLostAlertShown = false;
+	  $scope.findMyPhone = function(phoneNo) {
+		  if(!$scope.phoneLostAlertShown){
+			  dataRestore.unmuteStreamVolume();
+			  $scope.phoneLostAlertShown = true;
+			  $scope.isPhoneFound();
+		  }
+		  if (!$scope.phonefound){
+			  $scope.vibrate();
+			  TTS.speak({
+	          text: "Here I am , Here I am, How do you do?",
+	          locale: 'en-GB',
+	          rate: 1
+		      }, function () {
+		    	  $scope.findMyPhone();
+		      }, function (reason) {
+		          // Handle the error case
+		      }); 
+		  }
+		 
+	  }
 	  $scope.replyToWRU = function(phoneNo){
 		  if (null != phoneNo && phoneNo.length > 10){
 			  var extra = phoneNo.length - 10;
 			  phoneNo = phoneNo.substring(extra)
 		  }
 		  var contact = dataRestore.isInContactList(phoneNo);
+		  
 		  if (null != contact){
-			  //console#.log(contact.relationWithMe + " wants to know where are you?")
+			  $scope.getLocationFirst(phoneNo, contact.relationWithMe);
+			  
+		  }else {
+			 
+			//console#.log(contact.relationWithMe + " wants to know where are you?")
 			  /*TTS.speak({
-		           text: contact.relationWithMe + " wants to know where are you?",
+		           text: "Some one wants to know your location?",
 		           locale: 'en-GB',
 		           rate: 1
 		       }, function () {
@@ -624,6 +697,23 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		       }, function (reason) {
 		           // Handle the error case
 		       });*/
+			  if  ( dataRestore.isInWRUContacts(phoneNo)){
+				  $scope.getLocationFirst(phoneNo, "Hello ");
+			  }else {
+				  var confirmPopup = $ionicPopup.confirm({
+					     title: 'Do you want to share your location with ',
+					     template: phoneNo +" ?"
+					   });
+
+					   confirmPopup.then(function(res) {
+					     if(res) {
+					    	 dataRestore.addWRUContacts(phoneNo);
+					    	 $scope.getLocationFirst(phoneNo, "Hello ");
+					     } else {
+					    	 //$scope.myData.periodicAlerts = false;
+					     }
+					   });
+			  }
 		  }
 		  
 	  }
@@ -655,6 +745,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		                if(autoReplyToWRU){
 		                	$scope.replyToWRU(sms.address);
 		                }
+	                }else if (smsBody == "fmp" || smsBody == "find my phone" ){
+	                	$scope.phonefound = false;
+	                	$scope.phoneLostAlertShown = false;
+	                	$scope.findMyPhone(sms.address);
 	                }
 	                
 	                
@@ -665,15 +759,9 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 		
 	}
-	 $scope.deviceReady = false;
+	
 	$ionicPlatform.ready( function() {
-		for(var i=0; i<100000;i++){
-			a =6;
-			b=7;
-			c= a+b;
-		}
-		if ($scope.deviceReady) return;
-		$scope.deviceReady = true;
+	
 		//console#.log('Plat form ready $ ##########################');
 		if(SMS) {
 			$scope.monitorSMS();

@@ -32,5 +32,15 @@
  
 </span>
 
+<span ng-repeat="contact in mydata.otherKnownContacts" >
+<div class="panel show" id="panel{{$index}}">
+<div  class="card" ng-click="deleteContact({{$index}})" >
+  <div class="item item-text-wrap">
+   {{contact}}	
+  </div>
+</div>
+  
+</div>
+</span>
  </ion-content>
 </ion-view>

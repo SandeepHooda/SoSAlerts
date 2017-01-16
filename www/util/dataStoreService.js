@@ -173,6 +173,67 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 		}
     	return useChargerUnplugEvent;
     }
+    this.getWRUContacts = function(){
+    	var contacts =  window.localStorage.getItem("getWRUContacts");
+    	if (null == contacts){
+    		contacts = "";
+    	}
+    	var wruContacts =  contacts.split(";");
+    	var knowncontacts = [];
+    	if (wruContacts)
+    		for (var i=0; i< wruContacts.length;i++){
+    			if (wruContacts[i] != "" && wruContacts[i] != "undefined" && wruContacts[i] != "null"){
+    				knowncontacts.push(wruContacts[i]);
+    			}
+    		}
+    	return knowncontacts;
+    }
+    this.addWRUContacts = function(phoneno){
+    	var contacts = window.localStorage.getItem("getWRUContacts");
+    	if (null == contacts){
+    		contacts = "";
+    	}
+    	contacts +=";"+phoneno;
+    	 window.localStorage.setItem("getWRUContacts",contacts);
+    }
+    this.deleteWRUContacts = function(phoneno){
+    	var contactTobeSaved = "";
+    	var contacts = window.localStorage.getItem("getWRUContacts");
+    	if (null == contacts){
+    		contacts = "";
+    	}
+    	var wruContacts = contacts.split(";");
+    	if (wruContacts != null && wruContacts.length > 0){
+    		for (var i=0;i<wruContacts.length;i++){
+    			if (wruContacts[i] != phoneno && wruContacts[i] != 'undefined' && wruContacts[i] != "") {
+    				contactTobeSaved += ";"+phoneno;
+    			}
+    		}
+    	}
+    	
+    	if (contactTobeSaved == ""){
+    		window.localStorage.removeItem("getWRUContacts");
+    	}else {
+    		window.localStorage.setItem("getWRUContacts",contactTobeSaved);
+    	}
+    	
+    }
+    this.isInWRUContacts = function(phoneno){
+    	var contacts = window.localStorage.getItem("getWRUContacts");
+    	if (null == contacts){
+    		contacts = "";
+    	}
+    	var wruContacts = contacts.split(";");
+    	if (wruContacts != null && wruContacts.length > 0){
+    		for (var i=0;i<wruContacts.length;i++){
+    			if (wruContacts[i] == phoneno) {
+    				return true;
+    			}
+    		}
+    	}
+    	
+    	return false;
+    }
     this.isInContactList = function(number){
     	var contact = null;
     	var mydata = {};
@@ -434,6 +495,10 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
 	    
 	    
 	    
+    }
+    this.unmuteVolume = function(){
+    	this.recognition = new SpeechRecognition();
+    	this.recognition.unmute();
     }
     this.unmuteStreamVolume = function(){
     	this.recognition.unmute();
