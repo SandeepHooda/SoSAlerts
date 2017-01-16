@@ -297,7 +297,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 					if (appendLocationName){
 						$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert);
 					}else{
-						$scope.sendSMSWithLocationName (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert, '');
+						$scope.sendSMSWithLocationName (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert, ''); // a function that gets location name, but now we are passing it blank so it will use blank
 					}
 					
 				}
@@ -914,9 +914,70 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			//setTimeout(function(){}, 2000);
 			  
 		});//Platform ready
-	
-	
-	 
+	    
+	    $scope.tripAutoPilot = false;
+	    $scope.previousLocation = "";
+	    $scope.currentLocation = "";
+	    $scope.tripAutoPilotFirstRun = true;
+	    
+	    $scope.isThisKnownLocation  = function(position){
+			var lat = position.coords.latitude;
+		    var lon = position.coords.longitude;
+		   
+			//var location = {"withInSafeZone":false, "NameOfLocation":""};
+			var location = $scope.LocationInSafeZone(lat,lon);
+			$scope.currentLocation = location.NameOfLocation;
+			if($scope.tripAutoPilotFirstRun) {
+				$scope.previousLocation = $scope.currentLocation;
+				$scope.tripAutoPilotFirstRun = false;
+			}
+			if ($scope.previousLocation != $scope.currentLocation){
+				
+					if ($scope.previousLocation == "" && $scope.currentLocation != ""){
+						//Entering
+						$scope.reachedSafelyWithMessage(" reaching "+$scope.currentLocation, true, false);
+					}
+					if ($scope.previousLocation != "" && $scope.currentLocation == ""){
+						//Exiting known location
+						$scope.reachedSafelyWithMessage(" starting from  "+$scope.currentLocation, true, false);
+					}
+				$scope.previousLocation = $scope.currentLocation;
+			}
+			
+		}
+		  
+		$scope.night = false;  
+		$scope.recursiveTripAutopilot_Time = 2;
+	    $scope.recursiveTripAutopilot = function(){
+	    	if(!$scope.tripAutoPilot) return;
+	    	
+	    	navigator.geolocation.getCurrentPosition($scope.isThisKnownLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+	    	
+	    	if ($scope.tripAutoPilot){
+	    		var d = new Date();
+	    	    var hour = d.getHours();
+	    	    if (hour >= 21 || hour <= 6 ) {
+	    	    	//$scope.recursiveTripAutopilot_Time ++;
+	    	    	$scope.recursiveTripAutopilot_Time = ($scope.recursiveTripAutopilot_Time % 15) + 1;
+	    	    }else {
+	    	    	$scope.recursiveTripAutopilot_Time = 2;
+	    	    }
+	    		setTimeout($scope.recursiveTripAutopilot, $scope.recursiveTripAutopilot_Time *60000 );
+	    	}
+	    }
+	    $scope.checkTripAutoPilot = function(){
+	    	
+	    	//alert(dataRestore.getFromCache("tripAutoPilot","boolean"));
+			$scope.tripAutoPilot = dataRestore.getFromCache("tripAutoPilot","boolean");
+			if ($scope.tripAutoPilot){
+				$scope.tripAutoPilotFirstRun = true;
+				$scope.recursiveTripAutopilot();
+			}
+	    }
+		$rootScope.$on('setAutoPilotMode',function(event){
+			$scope.checkTripAutoPilot();
+		});
+		$scope.checkTripAutoPilot();
 	  	
 	}
 ])

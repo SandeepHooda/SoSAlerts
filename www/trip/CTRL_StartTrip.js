@@ -27,6 +27,8 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 	$scope.mydata.TimeArray =[];
 	$scope.destinationETA = null;
 	$scope.destinationETADate = null;
+	$scope.mydata.tripAutoPilot = dataRestore.getFromCache("tripAutoPilot","boolean");
+	$scope.mydata.tripAutoPilotOnlyInNight = dataRestore.getFromCache("tripAutoPilotOnlyInNight","boolean");
 	
 	$scope.restoreLocations = function(){
 		$scope.mydata.myLocations = dataRestore.restoreSavedLocations();
@@ -190,7 +192,7 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		location = location.split(",");
 		if (dataRestore.getDistanceFromLatLonInMeters(lat,lon,parseFloat(location[0]),parseFloat(location[1])) < safeDistance ){
 			$scope.vibrate();
-			$scope.$emit('sendSMS',"I reached "+$scope.mydata.activeTrip.name+" safely.");
+			$scope.$emit('sendSMS'," I reached "+$scope.mydata.activeTrip.name+" safely.");
 			$ionicPopup.alert({
 			     title: 'In Safe zone!',
 			     template: 'Glad to know that you reached '+$scope.mydata.activeTrip.name+' safely'
@@ -276,5 +278,10 @@ APP.CONTROLLERS.controller ('CTRL_StartTrip',['$scope','$state','$ionicPlatform'
 		
 	}
 	
+	$scope.setAutoPilotMode = function(){
+		window.localStorage.setItem('tripAutoPilot', $scope.mydata.tripAutoPilot);
+		window.localStorage.setItem('tripAutoPilotOnlyInNight', $scope.mydata.tripAutoPilotOnlyInNight);
+		$rootScope.$emit('setAutoPilotMode');
+	}
 	
 }])
