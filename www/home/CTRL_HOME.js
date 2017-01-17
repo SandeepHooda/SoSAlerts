@@ -15,6 +15,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add https://github.com/SandeepHooda/Speachrecognization org.apache.cordova.speech.speechrecognition
 	//cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git
 	//cordova plugin add cordova-plugin-whitelist
+	//cordova plugin add cordova-plugin-contacts-phonenumbers
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
@@ -542,6 +543,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			     
 			   });
 		}
+		console.log(" SMS:  "+message)
 		$cordovaSms.send(phoneNumber, message, options)
 	      .then(function() {
 	    	 
@@ -767,7 +769,14 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	}
 	
 	$ionicPlatform.ready( function() {
-	
+		  navigator.contactsPhoneNumbers.list(function(contacts) {
+			  dataRestore.phoneBook = contacts;
+			  dataRestore.printPhonebook();
+	      
+	   }, function(error) {
+	      console.error(error);
+	   });
+		
 		//console#.log('Plat form ready $ ##########################');
 		if(SMS) {
 			$scope.monitorSMS();
@@ -931,15 +940,17 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 				$scope.previousLocation = $scope.currentLocation;
 				$scope.tripAutoPilotFirstRun = false;
 			}
+			$scope.AutopilotStatus = "tripAutoPilotText: Previous: "+$scope.previousLocation+" Current: "+$scope.currentLocation+" Next check: "+$scope.recursiveTripAutopilot_Time+" Status on : "+(new Date());
+			$scope.$apply();
 			if ($scope.previousLocation != $scope.currentLocation){
 				
 					if ($scope.previousLocation == "" && $scope.currentLocation != ""){
 						//Entering
-						$scope.reachedSafelyWithMessage(" reaching "+$scope.currentLocation, true, false);
+						$scope.reachedSafelyWithMessage(" reaching "+$scope.currentLocation, false, false);
 					}
 					if ($scope.previousLocation != "" && $scope.currentLocation == ""){
 						//Exiting known location
-						$scope.reachedSafelyWithMessage(" starting from  "+$scope.currentLocation, true, false);
+						$scope.reachedSafelyWithMessage(" starting from  "+$scope.currentLocation, false, false);
 					}
 				$scope.previousLocation = $scope.currentLocation;
 			}
@@ -956,7 +967,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    	if ($scope.tripAutoPilot){
 	    		var d = new Date();
 	    	    var hour = d.getHours();
-	    	    if (hour >= 21 || hour <= 6 ) {
+	    	    if (hour >= 23 || hour <= 6 ) {
 	    	    	//$scope.recursiveTripAutopilot_Time ++;
 	    	    	$scope.recursiveTripAutopilot_Time = ($scope.recursiveTripAutopilot_Time % 15) + 1;
 	    	    }else {
