@@ -771,7 +771,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	$ionicPlatform.ready( function() {
 		  navigator.contactsPhoneNumbers.list(function(contacts) {
 			  dataRestore.phoneBook = contacts;
-			  dataRestore.printPhonebook();
+			  //dataRestore.printPhonebook();
 	      
 	   }, function(error) {
 	      console.error(error);
