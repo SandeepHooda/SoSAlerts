@@ -6,11 +6,11 @@ APP.CONTROLLERS.controller ('CTRL_SETTINGS',['$scope','$ionicPlatform','dataRest
 		dataRestore.restoreSettings($scope.myData);
 		
 	}
-	if(!$scope.myData.frequencyOfGreenAlerts){
-		$scope.myData.frequencyOfGreenAlerts = 5;
+	if(!$scope.myData.frequencyOfGreenAlerts || $scope.myData.frequencyOfGreenAlerts <15){
+		$scope.myData.frequencyOfGreenAlerts = 15;
 	}
-	if(!$scope.myData.frequencyOfRedAlerts){
-		$scope.myData.frequencyOfRedAlerts = 5;
+	if(!$scope.myData.frequencyOfRedAlerts || $scope.myData.frequencyOfRedAlerts < 60){
+		$scope.myData.frequencyOfRedAlerts = 60;
 	}
 	if(!$scope.myData.shakeIntensity){
 		$scope.myData.shakeIntensity = 15;

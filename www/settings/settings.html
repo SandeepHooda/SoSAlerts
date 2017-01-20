@@ -9,14 +9,14 @@
 <b><span >Frequency of Periodic alerts: {{myData.frequencyOfGreenAlerts}} minutes </span>
 <div class="item range">
 <i class="ion-ios-minus" ></i> 
- <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="5"  max="60" style=" width: 260px; height: 40px;">
+ <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfGreenAlerts" min="15"  max="60" style=" width: 260px; height: 40px;">
  <i class="ion-ios-plus"></i> 
  </div>
 <hr/>
 Frequency of Red alerts: <span>{{myData.frequencyOfRedAlerts}}</span> seconds 
 <div class="item range">
 <i class="ion-ios-minus" ></i> 
- <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfRedAlerts" min="5"  max="60" style=" width: 260px; height: 40px;">
+ <input type="range" name="range" ng-change="updateSettings()" ng-model="myData.frequencyOfRedAlerts" min="60"  max="120" style=" width: 260px; height: 40px;">
  <i class="ion-ios-plus"></i> 
   </div>
 <hr/>
@@ -38,11 +38,14 @@ Selected Shake intensity: <span>{{myData.shakeIntensity}}</span>
 <input type="radio" name="map" ng-model="myData.mapType"  value="googleMaps" ng-change="updateSettings()" style=" width: 20px; height: 20px;">  Google maps</input>
 <input type="radio" name="map" ng-model="myData.mapType"  value="bothMaps" ng-change="updateSettings()" style=" width: 20px; height: 20px;">  Both</input>
 <hr/>
-<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.playWelcomeMessage" ng-change="updateSettings()"> Turn on voice assistance for app navigation</input>
+<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.anounceSMSText" ng-change="updateSettings()"> Announce incoming SMS to me</input>
 <hr/>
-<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.anounceSMSText" ng-change="updateSettings()"> Announce SMS text</input>
+ If you want to find your phone send SMS: ("fmp" or "Find my phone")
 <hr/>
+ If your emergency contacts want to locate you they need to send SMS ("wru" or "Where are you"). You may opt to not respond to that message by disabling this feature from below check box<br/>
 <input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.autoReplyToWRU" ng-change="updateSettings()"> Reply to 'WRU (i.e.Where are you) SMS'</input>
+<hr/>
+<input type="checkbox"  style="height:20px;width:20px; " ng-model="myData.playWelcomeMessage" ng-change="updateSettings()"> Turn on voice assistance for app navigation</input>
 </b>
 </span>
  </ion-content>
