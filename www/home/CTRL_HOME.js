@@ -297,15 +297,12 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			
 			if (activeContacts && activeContacts.length > 0){
 				for (var i =0; i<activeContacts.length;i++ ){
-					setTimeout(function(){
-						console.log("Sending SMS to "+activeContacts[i].phone)
-						if (appendLocationName){
-							$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert);
-						}else{
-							$scope.sendSMSWithLocationName (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert, ''); // a function that gets location name, but now we are passing it blank so it will use blank
-						}	
-					}, 1000*(i*5));
-					
+					console.log("Sending SMS to :"+activeContacts[i].phone)
+					if (appendLocationName){
+						$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert);
+					}else{
+						$scope.sendSMSWithLocationName (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert, ''); // a function that gets location name, but now we are passing it blank so it will use blank
+					}
 					
 				}
 			}
@@ -332,10 +329,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 		if (activeContacts && activeContacts.length > 0){
 			for (var i =0; i<activeContacts.length;i++ ){
-				setTimeout(function(){
-					$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
-				}, 1000*(i*5));
-				
+				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
 			}
 		}
 		if(dataRestore.getFromCache('redAlert','boolean')){
@@ -370,10 +364,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		
 		if (activeContacts && activeContacts.length > 0){
 			for (var i =0; i<activeContacts.length;i++ ){
-				setTimeout(function(){
-					$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
-				}, 1000*(i*5));
-				
+				$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, false)
 			}
 		}
 		if($scope.myData.periodicAlerts){
@@ -536,7 +527,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			}, 1000);
 	}
 	
-		
+	$scope.delayInNextSMS = 0;	
 	$scope.sendSMSWithLocationName = function(phoneNumber, message, showConfirmationAlert,locationName){
 		if (phoneNumber.length == 10){
 			phoneNumber = "0"+phoneNumber;
@@ -560,17 +551,24 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 		
 		try{
-			console.log(phoneNumber+" $cordovaSms.send SMS:  "+message)
-			$cordovaSms.send(phoneNumber, message, options)
-		      .then(function() {
-		    	 
-		      }, function(error) {
-		    	  $ionicPopup.alert({
-					     title: 'Warning : SMS could not be Sent: '+error,
-					     template: 'Phone #: '+phoneNumber +' Message: '+message
-					     
-					   });
-		      });
+			
+			$scope.delayInNextSMS =$scope.delayInNextSMS % 5;
+			++$scope.delayInNextSMS;
+			console.log( " Delay in next sms :" +$scope.delayInNextSMS)
+			setTimeout(function(){
+				console.log(phoneNumber+" : $cordovaSms.send SMS:  "+message)
+				$cordovaSms.send(phoneNumber, message, options)
+			      .then(function() {
+			    	 
+			      }, function(error) {
+			    	  $ionicPopup.alert({
+						     title: 'Warning : SMS could not be Sent: '+error,
+						     template: 'Phone #: '+phoneNumber +' Message: '+message
+						     
+						   });
+			      });
+			}, 1000*($scope.delayInNextSMS*3));
+			
 		}catch(e){
 			console.log(" SMS plugin error")
 		}
