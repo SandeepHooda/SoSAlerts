@@ -543,14 +543,15 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			  };
 		$scope.vibrate();
 		if (showConfirmationAlert){
-			$ionicPopup.alert({
+			setTimeout($ionicPopup.alert({
 			     title: 'SMS being Sent!',
 			     template: 'Phone #: '+phoneNumber +' Message: '+message
 			     
-			   });
+			   }));
 		}
-		console.log(" SMS:  "+message)
+		
 		try{
+			console.log(phoneNumber+" SMS:  "+message)
 			$cordovaSms.send(phoneNumber, message, options)
 		      .then(function() {
 		    	 
@@ -627,21 +628,26 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	  $scope.wruPhoneNo = "";
 	  $scope.wruPhoneRelation = "";
 	  $scope.NowReplyToWRU = function(position){
-		  var lat = position.coords.latitude;
-		    var lon = position.coords.longitude;
-		    $scope.userLocation = lat + ',' + lon;
-		    $scope.userLocationGoogle = $scope.userLocation+',15z';
-		    var settings = {};
-			dataRestore.restoreSettings(settings);
-			var locationLink = "";
-			if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
-				locationLink += ' https://www.google.co.in/maps/@'+$scope.userLocationGoogle;
-			}
-			if (settings.mapType === 'mapMyIndia'  || settings.mapType === 'bothMaps'){
-				locationLink +=' https://maps.mapmyindia.com/@'+$scope.userLocation
-			}
+		  var locationLink = " My phone GPS not working. So not able to locate the position correctly. Please retry in a while.";
+		  if(position && position.coords){
+			  locationLink = " my location is ";
+			  var lat = position.coords.latitude;
+			    var lon = position.coords.longitude;
+			    $scope.userLocation = lat + ',' + lon;
+			    $scope.userLocationGoogle = $scope.userLocation+',15z';
+			    var settings = {};
+				dataRestore.restoreSettings(settings);
+				
+				if (settings.mapType === 'googleMaps' || settings.mapType === 'bothMaps'){
+					locationLink += ' https://www.google.co.in/maps/@'+$scope.userLocationGoogle;
+				}
+				if (settings.mapType === 'mapMyIndia'  || settings.mapType === 'bothMaps'){
+					locationLink +=' https://maps.mapmyindia.com/@'+$scope.userLocation
+				}  
+		  }
+		  
 			
-			$scope.sendSMS ($scope.wruPhoneNo,$scope.wruPhoneRelation+ " my location is "+ locationLink, false);
+			$scope.sendSMS ($scope.wruPhoneNo,$scope.wruPhoneRelation+ locationLink, false);
 	  }
 	  
 	  $scope.getLocationFirst = function(phoneNo, wruPhoneRelation){
