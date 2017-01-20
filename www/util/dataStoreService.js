@@ -186,9 +186,55 @@ APP.SERVICES.service('dataRestore', function($rootScope) {
     				knowncontacts.push(wruContacts[i]);
     			}
     		}
-    	return knowncontacts;
+    	return this.addNameToContacts( knowncontacts);
     }
+    this.addNameToContacts = function(knowncontacts){
+    	var knowncontactsWithNames = []; 
+    	if (knowncontacts.length > 0) {
+    		for (var i=0;i<knowncontacts.length;i++){
+    			var obj = {};
+    			obj.number = knowncontacts[i];
+    			obj.name = this.findPhoneNoInContactBook(obj.number);
+    			knowncontactsWithNames.push(obj);
+    		}
+    		
+    	}
+    	console.log(knowncontactsWithNames)
+    	return knowncontactsWithNames;
+    }
+    this.findPhoneNoInContactBook = function(searchNo){
+    	if (searchNo.length > 10){
+   		 var extra = searchNo.length - 10;
+   		searchNo = searchNo.substring(extra)
+    	}
+    	
+		  var contacts = this.phoneBook;
+		  
+	      for(var i = 0; i < contacts.length; i++) {
+	        // console.log(contacts[i].id + " - " + contacts[i].displayName);
+	         for(var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+	            var phone = contacts[i].phoneNumbers[j];
+	            if (null != phone && null != phone.number ){
+	            	var number = phone.normalizedNumber ;
+	            	if (number.length > 10){
+	            		 var extra = number.length - 10;
+	            		 number = number.substring(extra)
+	            	}
+	            	
+		  			if (number == searchNo) {
+		  				return contacts[i].displayName;
+		  			}
+		  		 }
+	            //console.log("===> " + phone.type + "  " + phone.number + " (" + phone.normalizedNumber+ ")");
+	         }
+	      }
+	      return "";
+	  };
     this.addWRUContacts = function(phoneno){
+    	if (phoneno.length > 10){
+      		 var extra = phoneno.length - 10;
+      		phoneno = phoneno.substring(extra)
+       	}
     	var contacts = window.localStorage.getItem("getWRUContacts");
     	if (null == contacts){
     		contacts = "";

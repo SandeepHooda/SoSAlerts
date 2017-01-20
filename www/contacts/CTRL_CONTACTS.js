@@ -34,7 +34,7 @@ APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRest
 		$ionicPlatform.ready( function() {
 			$scope.restoreFromStorage();
 		});
-		//dataRestore.addWRUContacts("9216");
+		//dataRestore.addWRUContacts("9316046895");
 		//window.localStorage.setItem("getWRUContacts","");
 		$scope.getWruContacts = function(){
 			$scope.mydata.otherKnownContacts = dataRestore.getWRUContacts(); 
@@ -49,7 +49,7 @@ APP.CONTROLLERS.controller ('CTRL_CONTACTS',['$scope','$ionicPlatform','dataRest
 
 			   confirmPopup.then(function(res) {
 			     if(res) {
-			    	 dataRestore.deleteWRUContacts($scope.mydata.otherKnownContacts[index]); 
+			    	 dataRestore.deleteWRUContacts($scope.mydata.otherKnownContacts[index].number); 
 						$scope.mydata.otherKnownContacts = dataRestore.getWRUContacts();
 						
 			     }

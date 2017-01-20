@@ -16,6 +16,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	//cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git
 	//cordova plugin add cordova-plugin-whitelist
 	//cordova plugin add cordova-plugin-contacts-phonenumbers
+	//cordova plugin add https://github.com/boltex/cordova-plugin-powermanagement
+	//cordova plugin add https://github.com/katzer/cordova-plugin-local-notifications de.appplant.cordova.plugin.local-notification
 	
 	$scope.name ="Sandeep";
 	$scope.myData ={};
@@ -295,6 +297,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			
 			if (activeContacts && activeContacts.length > 0){
 				for (var i =0; i<activeContacts.length;i++ ){
+					console.log("Sending SMS to "+activeContacts[i].phone)
 					if (appendLocationName){
 						$scope.sendSMS (activeContacts[i].phone,activeContacts[i].relation+ message, showConfirmationAlert);
 					}else{
@@ -526,6 +529,9 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	
 		
 	$scope.sendSMSWithLocationName = function(phoneNumber, message, showConfirmationAlert,locationName){
+		if (phoneNumber.length == 10){
+			phoneNumber = "0"+phoneNumber;
+		}
 		message += ' '+locationName
 		var options = {
 			    replaceLineBreaks: false, // true to replace \n by a new line, false by default
@@ -544,16 +550,21 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			   });
 		}
 		console.log(" SMS:  "+message)
-		$cordovaSms.send(phoneNumber, message, options)
-	      .then(function() {
-	    	 
-	      }, function(error) {
-	    	  $ionicPopup.alert({
-				     title: 'Warning : SMS could not be Sent: '+error,
-				     template: 'Phone #: '+phoneNumber +' Message: '+message
-				     
-				   });
-	      });
+		try{
+			$cordovaSms.send(phoneNumber, message, options)
+		      .then(function() {
+		    	 
+		      }, function(error) {
+		    	  $ionicPopup.alert({
+					     title: 'Warning : SMS could not be Sent: '+error,
+					     template: 'Phone #: '+phoneNumber +' Message: '+message
+					     
+					   });
+		      });
+		}catch(e){
+			console.log(" SMS plugin error")
+		}
+		
 	}
 	$scope.sendSMS = function(phoneNumber, message, showConfirmationAlert) {
 		$http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$scope.userLocation+'&key='+dataRestore.getGoogleKeyforLocationSrv()).then(function(response){
@@ -569,7 +580,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	}
 	
 	$scope.foundLocation = function(position) {
-
+		 $scope.NoLocationMessage = "";
+		  $scope.$apply();
 	    var lat = position.coords.latitude;
 	    var lon = position.coords.longitude;
 	    $scope.userLocation = lat + ',' + lon;
@@ -577,7 +589,9 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    //window.open('https://www.google.co.in/maps/@'+$scope.userLocationGoogle,'_system');
 	    //window.open('https://maps.mapmyindia.com/@'+$scope.userLocation,'_system');
 	 }
-	  $scope.noLocation = function() {
+	  $scope.noLocation = function(error ) {
+		  $scope.NoLocationMessage = "Could not locate you : "+(new Date());
+		  $scope.$apply();
 		  
 	  }
 	 //startWatch(successCallback, failureCallback onSMSArrive https://github.com/floatinghotpot/cordova-plugin-sms/tree/master/docs
@@ -767,7 +781,20 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 		
 	}
-	
+	$scope.createNotification = function(){
+		
+		var date = new Date();
+		//navigator.notification.beep(1);
+		cordova.plugins.notification.local.schedule({
+		    id: 1,
+		    title: "SOS alert",
+		    message: "Happy to help you.",
+		    at: date,
+		    sound: 'file://resources/audio/sound.mp3',
+		    icon: "http://domain.com/icon.png"
+		});
+	}
+	$scope.canShowNotification = false;
 	$ionicPlatform.ready( function() {
 		  navigator.contactsPhoneNumbers.list(function(contacts) {
 			  dataRestore.phoneBook = contacts;
@@ -777,6 +804,17 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	      console.error(error);
 	   });
 		
+		  cordova.plugins.notification.local.hasPermission(function (granted) {
+			  if (!granted){
+				  cordova.plugins.notification.local.registerPermission(function (granted) {
+					  if (granted){
+						  $scope.canShowNotification = true;
+					  }
+				  });
+			  }else {
+				  $scope.canShowNotification = true;
+			  }
+		  });
 		//console#.log('Plat form ready $ ##########################');
 		if(SMS) {
 			$scope.monitorSMS();
@@ -880,7 +918,10 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		// Enable background mode
 		cordova.plugins.backgroundMode.enable();
 		cordova.plugins.backgroundMode.onactivate = function() {
-		   
+			if ($scope.canShowNotification){
+				$scope.createNotification();
+			}
+			
 			/*setTimeout(function(){
 				TTS.speak({
 			           text: 'Please don\'t put SOS alert in background. You may lock your phone though.',
@@ -893,6 +934,17 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			       });
 			},100);*/
 			}
+		
+		window.powerManagement.dim(function() {
+		    console.log('Wakelock acquired');
+		  }, function() {
+		    console.log('Failed to acquire wakelock');
+		  });
+		  window.powerManagement.setReleaseOnPause(false, function() {
+		    console.log('setReleaseOnPause successfully');
+		  }, function() {
+		    console.log('Failed to set');
+		  });
 		
 		cordova.plugins.autoStart.enable(); 
 		
@@ -930,6 +982,8 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    $scope.tripAutoPilotFirstRun = true;
 	    
 	    $scope.isThisKnownLocation  = function(position){
+	    	 $scope.NoLocationMessage = "";
+			  $scope.$apply();
 			var lat = position.coords.latitude;
 		    var lon = position.coords.longitude;
 		   
@@ -946,11 +1000,29 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 				
 					if ($scope.previousLocation == "" && $scope.currentLocation != ""){
 						//Entering
+						TTS.speak({
+					          text: "Entering "+$scope.currentLocation,
+					          locale: 'en-GB',
+					          rate: 1
+						      }, function () {
+						    	 
+						      }, function (reason) {
+						          // Handle the error case
+						      });
 						$scope.reachedSafelyWithMessage(" reaching "+$scope.currentLocation, false, false);
 					}
 					if ($scope.previousLocation != "" && $scope.currentLocation == ""){
 						//Exiting known location
-						$scope.reachedSafelyWithMessage(" starting from  "+$scope.currentLocation, false, false);
+						TTS.speak({
+					          text: "Exiting "+$scope.previousLocation,
+					          locale: 'en-GB',
+					          rate: 1
+						      }, function () {
+						    	 
+						      }, function (reason) {
+						          // Handle the error case
+						      });
+						$scope.reachedSafelyWithMessage(" starting from  "+$scope.previousLocation, false, false);
 					}
 				$scope.previousLocation = $scope.currentLocation;
 			}
@@ -958,11 +1030,15 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 		}
 		  
 		$scope.night = false;  
-		$scope.recursiveTripAutopilot_Time = 2;
+		$scope.recursiveTripAutopilot_Time = 1;
+		$scope.CallRecursiveTripAutopilot = function(){
+			$scope.recursiveTripAutopilot();
+		}
 	    $scope.recursiveTripAutopilot = function(){
-	    	if(!$scope.tripAutoPilot) return;
 	    	
-	    	navigator.geolocation.getCurrentPosition($scope.isThisKnownLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+	    	if(!$scope.tripAutoPilot) return;
+	    	 $scope.NoLocationMessage = "";
+			navigator.geolocation.getCurrentPosition($scope.isThisKnownLocation, $scope.noLocation, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 	    	
 	    	if ($scope.tripAutoPilot){
 	    		var d = new Date();
@@ -971,9 +1047,11 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 	    	    	//$scope.recursiveTripAutopilot_Time ++;
 	    	    	$scope.recursiveTripAutopilot_Time = ($scope.recursiveTripAutopilot_Time % 15) + 1;
 	    	    }else {
-	    	    	$scope.recursiveTripAutopilot_Time = 2;
+	    	    	$scope.recursiveTripAutopilot_Time = 1;
 	    	    }
-	    		setTimeout($scope.recursiveTripAutopilot, $scope.recursiveTripAutopilot_Time *60000 );
+	    		setTimeout(function(){
+	    			$scope.CallRecursiveTripAutopilot();
+	    		}, $scope.recursiveTripAutopilot_Time *15000 )
 	    	}
 	    }
 	    $scope.checkTripAutoPilot = function(){
@@ -989,6 +1067,7 @@ APP.CONTROLLERS.controller ('CTRL_HOME',['$scope','$cordovaSms','$cordovaFlashli
 			$scope.checkTripAutoPilot();
 		});
 		$scope.checkTripAutoPilot();
+	
 	  	
 	}
 ])
